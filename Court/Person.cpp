@@ -1,58 +1,97 @@
 #include "Person.h"
 
-Person::Person(const char* name, int id) throw(char*) : name(nullptr)
+
+Person::Person(const char* name, int id) throw(int)
 {
-	setName(name);
-	setId(id);
+	this->name = new char[];
+	strcpy(this->name, name);
+
+	if(id < 0)
+	{
+		throw id;
+	}
+	else
+	{
+		this->id = id;
+	}
 }
 
-// Virtual
-Person::~Person()
+Person::Person(const Person& other) 
 {
-	delete []this->name;
+	if (this->name != nullptr)
+	{
+		delete[] this->name;
+	}
+
+	this->name = new char[strlen(other.getName()) + 1];
+	strcpy(this->name, other.getName());
+	id = other.getId();
 }
 
 void Person::setName(const char* name)
 {
-	delete []this->name;
-	this->name = new char[strlen(name)];
+	if (this->name != nullptr) 
+	{
+		delete[] this->name;
+	}
+
+	this->name = new char[];
 	strcpy(this->name, name);
 }
 
-void Person::setId(int id) throw(char*)
+void Person::setId(int id)
 {
-	if(id >= 0)
+	if (id >= 0)
 	{
 		this->id = id;
 	}
-	else
-	{
-		throw("Invalid person id, must be positive (while initilizing Person)");
-	}
 }
 
-inline const char* Person::getName() const
+const char* Person::getName() const 
 {
-	return name;
+	return this->name; 
 }
 
 inline int Person::getId() const
 {
-	return id;
+	return this->id;
+}
+
+Person::~Person()
+{
+	delete[] this->name;
+}
+
+const Person& Person::operator=(const Person& other)
+{
+	if (this->name != nullptr)
+	{
+		delete[] this->name;
+	}
+
+	this->name = new char[strlen(other.getName()) + 1];
+	strcpy(this->name, other.getName());
+	id = other.getId();
 }
 
 bool Person::operator==(const Person& other) const
 {
-	return strcmp(other.name,this->name) && (other.id == this->id);
+	if (strcmp(this->name, other.getName()) == 0 && this->id == other.getId())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 ostream& operator<<(ostream& os, const Person& person)
 {
-	cout << "In operator<<(Base&)\n";
-	os << "Id: " << person.id << " Name: " << person.name;
-	person.toOs(os);
-	return os;
+	os << "Name: " << person.getName() << ", Id: " << person.getId();
 }
 
-// Virtual
-void Person::toOs(ostream& os) const {}
+void Person::toOs(ostream& os) const
+{
+	os << "Name: " << this->name << ", Id: " << this->id;
+}
