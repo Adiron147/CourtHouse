@@ -57,6 +57,11 @@ tm* TmUtilities::cloneTm(const tm& toClone)
 {
 	tm *cloned = (tm*)malloc(sizeof(tm));
 
+	if(cloned == NULL)
+	{
+		exit(0);
+	}
+
 	memcpy(cloned,&toClone,sizeof(tm));
 
 	return cloned;

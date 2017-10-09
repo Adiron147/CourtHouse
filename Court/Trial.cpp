@@ -8,11 +8,10 @@ int Trial::ID = 0;
 
 //judge shouldn't be busy, room shouldn't be taken and defense != prosecution
 Trial::Trial(eTrialSubject subject, Judge& judge, Party& defense, Party& prosecution,
-		CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*):
-		judgeRef(judge)
+		CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*)
 {
 	// TODO: already initiated judge... Is it ok?
-	setJudge(judge);
+	setJudge(&judge);
 	setDefense(defense);
 	setProsecution(prosecution);
 	setStartTime(startTime);
@@ -117,21 +116,28 @@ inline const Jury* Trial::getJury() const
 	return jury;
 }
 
-void Trial::setJudge(const Judge& judge) throw(const char*)
+void Trial::setJudge(Judge* judge) throw(const char*)
 {
-	if(judge.isBusy(startTime,endTime))
+	if(judge != nullptr)
 	{
-		throw("Judge is busy! (while initiating trial)");
+		throw("Every trial must have a judge (judge can not be null)!");
 	}
 	else
 	{
-		this->judgeRef = judge;
+		if(judge->isBusy(startTime,endTime))
+		{
+			throw("Judge is busy! (while initiating trial)");
+		}
+		else
+		{
+			this->judge = judge;
+		}	
 	}
 }
 
 inline const Judge& Trial::getJudge() const
 {
-	return judgeRef;
+	return *judge;
 }
 
 void Trial::setTrialRoom(CourtRoom& trialRoom) throw(const char*)
@@ -171,7 +177,7 @@ bool Trial::operator==(const Trial& other) const
 		*this->prosecution == *other.prosecution &&
 		TmUtilities::isEquals(this->endTime, other.endTime) &&
 		TmUtilities::isEquals(this->startTime, other.startTime) &&
-		this->judgeRef == other.judgeRef &&
+		*this->judge == *other.judge &&
 		this->subject == other.subject)
 		{
 			if((this->trialRoom == nullptr && other.trialRoom == nullptr) ||
@@ -208,7 +214,7 @@ ostream& operator<<(ostream& os, const Trial& trial)
 	TmUtilities::tmToOs(os, trial.endTime);
 
 	os << endl << " subject: " <<trial.subject << endl <<
-		" Judge: " << trial.judgeRef << endl;
+		" Judge: " << trial.judge << endl;
 	
 	if(trial.hasJury())
 	{

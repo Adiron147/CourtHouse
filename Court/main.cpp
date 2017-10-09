@@ -132,7 +132,7 @@ void addJudgesToCourtHouse(CourtHouse& courtHouse)
             int startYear = 2000+i;
             int salary = (i+1)*10000;
 
-            Judge* judge =  new Judge(name, id, academicInst, graduateYear, startYear, salary, courtHouse);
+            Judge* judge =  new Judge(name, id, academicInst, graduateYear, startYear, salary);
             courtHouse.addJudge(judge);
 
             delete academicInst;

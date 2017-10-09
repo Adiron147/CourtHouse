@@ -26,7 +26,7 @@ private:
     Party* defense;
 	Party* prosecution;
     CourtRoom* trialRoom;
-    Judge& judgeRef;
+    Judge* judge;
 	Jury* jury;
 
 	Trial(const Trial& other);
@@ -58,7 +58,7 @@ public:
 	void setJury(Jury* jury); //jury == nullptr means no jury in trial
 	inline const Jury* getJury() const;
 
-	void setJudge(const Judge& judge) throw(const char*);
+	void setJudge(Judge* judge) throw(const char*);
 	inline const Judge& getJudge() const;
 
 	void setTrialRoom(CourtRoom& trialRoom) throw(const char*);
