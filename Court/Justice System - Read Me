@@ -1,0 +1,40 @@
+############################################ JUSTICE SYSTEM READ ME #########################################################################
+
+
+You are advised this BEFORE you start to implement methods.
+
+
+CourtHouse:
+
+1) Notice you have pointers array to judges - do not forget to delete each judge AND the array itself
+2) The court house can be referred as array of court rooms, we declared one as const for const references as you can see below:
+    CourtRoom& operator[](int index);
+	const CourtRoom& operator[](int index) const;
+3) When you add a Judge to the court house make sure to update the judge with "setWorkPlace()" that judge inherits from CourtWorker
+
+CourtRoom:
+
+1) The court room can be referred as array of trials, we declared one as const for const references.
+2) When you add a trial to a court room, you must update the Trial courtroom attribute as well inside the "addTrial()" function
+3) Every time you add a trial (addTrial() method) you need to check that the room isn't taken already in that time (use getStartTime() and getEndTime())
+by "isTaken()" method, if it is throw an exception
+
+4) Make sure to update the trial array size in each successful addition
+
+
+Trial:
+
+1)The Trial constructor must use the "CourtRoom.addTrial()" function so there will be no contridictions
+2)The Parties should be updated about the trial they are a part of
+3)Same for the Judge, you should also check that the judge isn't busy with "isBusy()" method otherwise an exception should be thrown
+4)Notice that by default there's no jury in the trial, if you like to add one use set Jury, also use hasJury() to determine whether or not
+there is a Jury assigned to the Trial, it is recommended to use it before "getJury()" call
+
+Party:
+
+1) In the Party Constructor you should use the PartyLawyer:: setParty() method to keep them both up to date
+
+Judge:
+
+1) In the Judge Constructor make sure that the court house is being updated about the new judge
+

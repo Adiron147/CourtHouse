@@ -1,0 +1,39 @@
+
+
+CourtRoom:
+roomNumber - לא const.
+SerialNumber - אותיות גדולות, אתחול ב-CPP.
+removeTrial - זריקה של מחרוזת, שינוי ל-void
+operator[] - זריקה של מחרוזת
+addTrial - הורדת ה-const במשתנה הקבלה
+operator=  private
+isTaken  - שינוי הפרמטרים כ-ref כדי למנוע שכפול
+operator+= - נמחק
+
+Trial:
+id - אותיות גדולות, אתחול ב-CPP.
+defense - הפך למצביע מרפרנס
+prosecution - הפך למצביע מרפרנס
+setDefense - זריקת מחרוזת
+setProsecution - זריקת מחרוזת
+operator=  private
+
+CourtWorker:
+setStartingYear - זריקה של מחרוזת
+ctor - זריקה של מחרוזת
+setSalary - זריקה של מחרוזת
+הסרה של המאפיין CourtHouse, אין בו שימוש
+
+Person:
+Ctor - זריקה של מחרוזת
+setId - זריקה של מחרוזת
+operator=  private
+
+Judge:
+הוספת כוכבית ל-trials
+operator=  private
+getAllTrials - מחיקה
+
+CourtRoom:
+הוספת כוכבית ל-trials
+operator=  private
