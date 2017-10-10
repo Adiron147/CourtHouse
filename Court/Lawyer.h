@@ -11,16 +11,16 @@ private:
     int graduatedYear;
 
     Lawyer(const Lawyer& other);
-
+	const Lawyer& operator=(const Lawyer& other);
 public:
-    Lawyer(const char* name, int id, const char* academicInstitution, int graduatedYear)throw(int);
+    Lawyer(const char* name, int id, const char* academicInstitution, int graduatedYear)throw(const char*);
     ~Lawyer();
 
-    inline char* getAcademicInstitution() const;
+    inline const char* getAcademicInstitution() const;
 
     inline int getGraduatedYear() const;
 
-    const Lawyer& operator=(const Lawyer& other);
+    
     virtual void toOs(ostream& os) const override;
 
 };

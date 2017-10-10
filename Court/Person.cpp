@@ -1,9 +1,9 @@
 #include "Person.h"
  
- Person::Person(const char* name, int id) throw(char*) : name(nullptr)
+ Person::Person(const char* name, int id) throw(const char*) : name(nullptr)
  {
+	setId(id);
  	setName(name);
- 	setId(id);
  }
  
  // Virtual
@@ -15,11 +15,11 @@
  void Person::setName(const char* name)
  {
  	delete []this->name;
- 	this->name = new char[strlen(name)];
+ 	this->name = new char[strlen(name) + 1];
  	strcpy(this->name, name);
  }
  
- void Person::setId(int id) throw(char*)
+ void Person::setId(int id) throw(const char*)
  {
  	if(id >= 0)
  	{
@@ -48,11 +48,10 @@
  
  ostream& operator<<(ostream& os, const Person& person)
  {
- 	cout << "In operator<<(Base&)\n";
  	os << "Id: " << person.id << " Name: " << person.name;
  	person.toOs(os);
  	return os;
  }
  
  // Virtual
--void Person::toOs(ostream& os) const {} 
+void Person::toOs(ostream& os) const {} 

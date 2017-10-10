@@ -26,12 +26,12 @@ private:
     Lawyer& lawyer;
 
     Party(const Party& other);
-    void setName(char *name);
+    void setName(const char *name);
     void setSide(ePartySide side);
     void setType(ePartyType type);
-
+	const Party& operator=(const Party& other);
 public:
-    Party(const char* name, ePartySide side, ePartyType type, const Lawyer& lawyer);
+    Party(const char* name, ePartySide side, ePartyType type, Lawyer& lawyer);
     ~Party();
 
     inline const char* getName() const;
@@ -44,7 +44,7 @@ public:
     inline const Lawyer& getLawyer() const;
 
 
-    const Party& operator=(const Party& other);
+    
     bool operator==(const Party& other) const;
     friend ostream& operator<<(ostream& os, const Party& party);
 };

@@ -1,4 +1,6 @@
-
+Party:
+setName - הוספת const.
+ctor - הורדת const מעורך דין
 
 CourtRoom:
 roomNumber - לא const.
@@ -37,3 +39,6 @@ getAllTrials - מחיקה
 CourtRoom:
 הוספת כוכבית ל-trials
 operator=  private
+
+כל הקבצים:
+operator= הופך ל-private

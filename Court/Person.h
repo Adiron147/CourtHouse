@@ -14,12 +14,12 @@ private:
 
 	Person(const Person& other);
 	void setName(const char* name);
-    void setId(int id) throw(char*);
+    void setId(int id) throw(const char*);
 	
 	virtual const Person& operator=(const Person& other);
 
 public:
-    Person(const char* name, int id) throw(char*);
+    Person(const char* name, int id) throw(const char*);
     virtual ~Person();
 
 	inline const char* getName() const;
