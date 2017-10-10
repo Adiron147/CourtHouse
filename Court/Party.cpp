@@ -79,5 +79,5 @@ bool Party::operator==(const Party& other) const
 }
  ostream& operator<<(ostream& os, const Party& party)
 {
-	 os << "Name: " << party.getName() << ", Side: " << party.getSide() << ", Type: " << party.getType() << ", Lawyer Name: " << party.getLawyer().getName;
+	 os << "Party Name: " << party.getName() << ", Side: " << party.getSide() << ", Type: " << party.getType() << ", Lawyer Name: " << party.getLawyer().getName;
 }
