@@ -7,7 +7,7 @@
 
 #include "CourtWorker.h"
 #include "Lawyer.h"
-#include "CourtHouse.h"
+#include <ctime>
 
 class Trial;
 

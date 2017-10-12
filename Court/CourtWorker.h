@@ -3,8 +3,6 @@
 
 #include "Person.h"
 
-class CourtHouse;
-
 class CourtWorker : virtual public Person 
 {
 

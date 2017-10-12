@@ -1,6 +1,8 @@
 #include "Trial.h"
 #include "TmUtilities.h"
 #include "Party.h"
+#include "CourtRoom.h"
+#include "Jury.h"
 
 int Trial::ID = 0;
 
@@ -40,7 +42,7 @@ void Trial::setSubject(eTrialSubject subject)
 void Trial::setDefense(Party& defense)  throw(const char*)
 {
 	// TODO: implement != on party
-	if(defense != prosecution)
+	if(defense != *prosecution)
 	{
 		delete this->defense;
 		this->defense = &defense;
@@ -54,7 +56,7 @@ void Trial::setDefense(Party& defense)  throw(const char*)
 void Trial::setProsecution(Party& prosecution)  throw(const char*)
 {
 	// TODO: implement != on party
-	if(defense != prosecution)
+	if(*defense != prosecution)
 	{
 		delete this->prosecution;
 		this->prosecution = &prosecution;
@@ -70,9 +72,16 @@ inline int Trial::getTrialId() const
 	return trialId;
 }
 
-bool Trial::setStartTime(const tm& startTime) throw(const char*)
+void Trial::setStartTime(const tm& startTime) throw(const char*)
 {
-	this->startTime = startTime;
+	if(TmUtilities::tmDiff(this->endTime, startTime) > 0 )
+	{
+		this->startTime = startTime;
+	}
+	else
+	{
+		throw("Trial start time can not be later than end time");
+	}
 }
 
 inline const tm& Trial::getStartTime() const
@@ -80,9 +89,16 @@ inline const tm& Trial::getStartTime() const
 	return startTime;
 }
 
-bool Trial::setEndTime(const tm& endTime) throw(const char*)
+void Trial::setEndTime(const tm& endTime) throw(const char*)
 {
-	this->endTime = endTime;
+	if(TmUtilities::tmDiff(endTime, this->startTime) > 0 )
+	{
+		this->endTime = endTime;
+	}
+	else
+	{
+		throw("Trial end time can not be earlier than start time");
+	}
 }
 
 inline const tm& Trial::getEndTime() const

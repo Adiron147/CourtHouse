@@ -1,4 +1,4 @@
-#pragma warning( disable : 4290 ) 
+#pragma warning( disable : 4290 )
 #ifndef __COURT_HOUSE_H
 #define __COURT_HOUSE_H
 
@@ -15,44 +15,44 @@ private:
 	char* state;
 	char* city;
 	char* name;
+	int maxNumOfCourtRooms;
 	size_t numOfCourtRooms; //positive integers
 	size_t numOfJudges;
-	CourtRoom* allCourtRooms;
+	CourtRoom** allCourtRooms;
 	Judge** allJudges;
 
 	CourtHouse(const CourtHouse& otherCourtHouse);
-	void setName(const char* name);
-	void setNumOfCourtRooms(int num);
-	void setNumOfJudges(int numOfJudges);
+	void setName(const char* name) throw(const char*);
+	//void setMaxNumOfCourtRooms(int num);
+	const CourtHouse& operator=(const CourtHouse& otherCourtHouse);
 
 public:
     //throws the number of court rooms if it is negative
-	CourtHouse(const char* state, const char* city, const char* name, int numOfCourtRooms = 1) throw(int);
+	CourtHouse(const char* state, const char* city, const char* name, int maxNumOfCourtRooms = 1) throw(const char*);
 	~CourtHouse();
 
-	void setState(const char* state);
-	inline char* getState() const;
+	void setState(const char* state) throw(const char*);;
+	inline const char* getState() const;
 
-	void setCity(const char* city);
-	inline char* getCity() const;
+	void setCity(const char* city) throw(const char*);;
+	inline const char* getCity() const;
 
-	inline char* getName() const;
+	inline const char* getName() const;
 
     void addJudge(Judge* judge) throw(const char*); //throws a message if "judge" is a nullptr or already in the court house system
     Judge** getAllJudges();
-	const Judge** getAllJudges() const ;
+	const Judge*const* getAllJudges() const { return allJudges;}
 	const Judge* getJudgeByName(const char* name) const ;
     Judge* getJudgeByName(const char* name);
     inline int getNumOfJudges() const;
 
     inline int getNumOfCourtRooms() const;
-	inline const CourtRoom* getAllCourtRooms() const;
-    void addCourtRoom(const CourtRoom& room) throw(const char*); //throws a message if the addition is inccorrect (when trying to add while the numOfCourtRooms already exceeded)
+    void addCourtRoom(CourtRoom& room) throw(const char*); //throws a message if the addition is inccorrect (when trying to add while the numOfCourtRooms already exceeded)
+	bool removeCourtRoom(int roomNumber);
 
-	const CourtHouse& operator=(const CourtHouse& otherCourtHouse);
 	friend ostream& operator<<(ostream& os, const CourtHouse& court);
-	CourtRoom& operator[](int index) throw(int);
-	const CourtRoom& operator[](int index) const throw(int);
+	CourtRoom& operator[](int index) throw(const char*);
+	const CourtRoom& operator[](int index) const throw(const char*);
 
 };
 #endif

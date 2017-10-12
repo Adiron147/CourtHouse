@@ -5,9 +5,6 @@
 #include "Lawyer.h"
 using namespace std;
 
-
-class Trial;
-
 class Party
 {
 public:
@@ -16,8 +13,8 @@ public:
     enum ePartySide {DEFENSE, PROSECUTION};
     enum ePartyType {SINGLE_PERSON, ORGANIZATION, STATE};
 
-    static const char* strPartySide[NUM_OF_PARTY_SIDES];
-    static const char* strPartyType[NUM_OF_PARTY_TYPES];
+    //static const char* strPartySide[];
+    //static const char* strPartyType[];
 
 private:
     char* name;
@@ -26,7 +23,7 @@ private:
     Lawyer& lawyer;
 
     Party(const Party& other);
-    void setName(const char *name);
+    void setName(const char *name) throw(const char*);
     void setSide(ePartySide side);
     void setType(ePartyType type);
 	const Party& operator=(const Party& other);
@@ -40,17 +37,16 @@ public:
 
     inline ePartyType getType() const;
 
-    void setLawyer(const Lawyer& lawyer);
+    //void setLawyer(const Lawyer& lawyer);
     inline const Lawyer& getLawyer() const;
 
 
     
     bool operator==(const Party& other) const;
+	bool operator!=(const Party& other) const;
     friend ostream& operator<<(ostream& os, const Party& party);
 };
-const int Party::NUM_OF_PARTY_SIDES;
-const int Party::NUM_OF_PARTY_TYPES;
-const char* Party::strPartySide[NUM_OF_PARTY_SIDES] = {"Defense", "Prosecution"};
-const char* Party::strPartyType[NUM_OF_PARTY_TYPES] = {"Single Person", "Organization", "State"};
+//const char* strPartySide[] = {"Defense", "Prosecution"};
+//const char* strPartyType[] = {"Single Person", "Organization", "State"};
 
 #endif

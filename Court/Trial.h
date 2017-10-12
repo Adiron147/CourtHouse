@@ -2,20 +2,19 @@
 #define __TRIAL_H
 
 #include <ctime>
-#include "Party.h"
-#include "Jury.h"
 #include "Judge.h"
-#include "CourtRoom.h"
 
-
+class Party;
+class Jury;
+class CourtRoom;
+class Judge;
 
 class Trial
 {
 public:
 	static const int NUM_OF_TYPES = 8;
 	enum eTrialSubject{CRIMINAL, YOUTH, CIVIL, PROPERTY, FAMILY, CLASS_ACTION, TRANSPORTATION, CONTRACTS};
-
-    static const char* strTrialSubject[NUM_OF_TYPES];
+	//static const char* strTrialSubject[];
 
 private:
 	static int ID;
@@ -43,10 +42,10 @@ public:
 
 	inline int getTrialId() const;
 
-	bool setStartTime(const tm& startTime) throw(const char*);
+	void setStartTime(const tm& startTime) throw(const char*);
 	inline const tm& getStartTime() const;
 
-	bool setEndTime(const tm& endTime) throw(const char*);
+	void setEndTime(const tm& endTime) throw(const char*);
 	inline const tm& getEndTime() const;
 
 	eTrialSubject getSubject() const;
@@ -72,7 +71,6 @@ public:
 	
 };
 
-const int Trial::NUM_OF_TYPES;
-const char* Trial::strTrialSubject[NUM_OF_TYPES] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
+//const char* Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
 
 #endif

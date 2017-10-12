@@ -1,4 +1,3 @@
-
 #ifndef __PERSON_H
 #define __PERSON_H
 
@@ -13,7 +12,7 @@ private:
     int id;
 
 	Person(const Person& other);
-	void setName(const char* name);
+	void setName(const char* name) throw(const char*);
     void setId(int id) throw(const char*);
 	
 	virtual const Person& operator=(const Person& other);
@@ -28,7 +27,7 @@ public:
 
 	bool operator==(const Person& other) const;
 	friend ostream& operator<<(ostream& os, const Person& person);
-	virtual void toOs(ostream& os) const;
+	virtual void toOs(ostream& os) const = 0;
 
 };
 #endif

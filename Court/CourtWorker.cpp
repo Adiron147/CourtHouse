@@ -18,7 +18,7 @@ void CourtWorker::setStartingYear(int startingYear) throw(char*)
 	}
 	else
 	{
-		throw("Invalid salary for court worker");
+		throw("Invalid starting year for court worker");
 	}
 }
 

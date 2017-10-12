@@ -34,7 +34,7 @@ void showAvailableRoomsForTrialsInACertainHour(const CourtHouse& court, tm& star
 
 void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject);
 
-void freeCourtHouse(CourtHouse* courtHouse);
+//void freeCourtHouse(CourtHouse* courtHouse);
 
 int main() 
 {
@@ -89,7 +89,7 @@ int main()
 
         showTrialsBySubject(*courtHouse, Trial::CRIMINAL);
 
-        freeCourtHouse(courtHouse);
+        //freeCourtHouse(courtHouse);
         
     }
     catch(...)
@@ -223,12 +223,12 @@ void insertJuryToTrial(Trial& trial)
 void showAllJudges(const CourtHouse& courtHouse)
 {
     int size = courtHouse.getNumOfJudges();
-    const Judge** allJudges = courtHouse.getAllJudges();
+    const Judge*const* allJudges = courtHouse.getAllJudges();
     cout << "The court house judges are: " << endl;
 
     for( int i = 0 ; i < size ; i++)
     {
-        cout << courtHouse.getAllJudges()[i] << endl;
+        cout << courtHouse[i] << endl;
     }
 }
 
@@ -291,7 +291,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 {
     int size = court.getNumOfCourtRooms();
 
-    cout << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
+    //cout << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         int numOfTrials = court[i].getNumOfTrials();
@@ -306,7 +306,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 
 }
 
-void freeCourtHouse(CourtHouse* courtHouse)
+/*void freeCourtHouse(CourtHouse* courtHouse)
 {
     int numOfJudges = courtHouse->getNumOfJudges();
     int numOfRooms = courtHouse->getNumOfCourtRooms();
@@ -339,4 +339,4 @@ void freeCourtHouse(CourtHouse* courtHouse)
         }
     }
     delete courtHouse;
-}
+}*/

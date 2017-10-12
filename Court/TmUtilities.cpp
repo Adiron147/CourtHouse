@@ -66,3 +66,19 @@ tm* TmUtilities::cloneTm(const tm& toClone)
 
 	return cloned;
 }
+
+double TmUtilities::tmDiff(const tm& firstTm, const tm& secondTm)
+{
+	tm *firstCloned = cloneTm(firstTm);
+	tm *secondCloned = cloneTm(secondTm);
+
+	time_t firstTime = mktime(firstCloned);
+	time_t secondTime = mktime(secondCloned);
+
+	double diff = difftime(firstTime, secondTime);
+
+	free(firstCloned);
+	free(secondCloned);
+
+	return diff;
+}

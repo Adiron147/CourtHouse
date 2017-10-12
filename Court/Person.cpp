@@ -6,17 +6,29 @@
  	setName(name);
  }
  
+ const Person& Person::operator=(const Person& other)
+ {
+	 throw("Not implemented");
+ }
+
  // Virtual
  Person::~Person()
  {
  	delete []this->name;
  }
  
- void Person::setName(const char* name)
+ void Person::setName(const char* name) throw(const char*)
  {
- 	delete []this->name;
- 	this->name = new char[strlen(name) + 1];
- 	strcpy(this->name, name);
+	delete []this->name;
+	if(name == nullptr)
+	{
+		throw("Person name can't be null");
+	}
+	else
+	{
+ 		this->name = new char[strlen(name) + 1];
+ 		strcpy(this->name, name);
+	}
  }
  
  void Person::setId(int id) throw(const char*)

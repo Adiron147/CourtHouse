@@ -11,6 +11,7 @@ public:
 	static bool doesColide(const tm& firstStart, const tm& firstEnd, const tm& secondStart, const tm& secondEnd);
 	static bool isEquals(const tm& first, const tm& second);
 	static void tmToOs(ostream& os, const tm&);
+	static double tmDiff(const tm&, const tm&);
 private:
 	TmUtilities() {};
 	static tm* TmUtilities::cloneTm(const tm& toClone);

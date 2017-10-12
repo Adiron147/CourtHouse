@@ -1,9 +1,10 @@
 #ifndef __JURY_H
 #define __JURY_H
 
-#include "JuryMember.h"
 #include <iostream>
 using namespace std;
+
+class JuryMember;
 
 class Jury
 {
@@ -15,27 +16,24 @@ private:
     int numOfMembers;            //logical size
     int maxNumOfMembers;        //physical size
     Jury(const Jury& otherJury);
+	const Jury& operator=(const Jury& jury);
     void setNumOfMembers(int numOfMembers);
 
 public:
     Jury(JuryMember** allJuryMembers, int maxNumOfMembers = DEFAULT_MAX_NUM_OF_JURY_MEMBERS) throw(int,const char*);// maxNumOfMembers must be a non-zero positive, "allJuryMembers" cannot be a nullptr
     ~Jury();
 
-    void setJuryMembers(JuryMember** allJuryMembers);
-    inline const JuryMember** getAllJuryMembers() const;
+    void setJuryMembers(JuryMember** allJuryMembers) throw(const char*);
 
     inline int getNumOfJuryMembers() const;
 
-    void addJuryMember(const JuryMember* juryMember) throw(const char*); //throws a message if "juryMember" is a nullptr or maxNumOfMembers already exceeded
-    bool removeJuryMember(int id) throw(int);
+    void addJuryMember(JuryMember* juryMember) throw(const char*); //throws a message if "juryMember" is a nullptr or maxNumOfMembers already exceeded
+    bool removeJuryMember(int id) throw(const char*);
 
-    const Jury& operator=(const Jury& jury);
-    const Jury& operator+=(const JuryMember& juryMember) throw(const char*);
-    const Jury& operator-=(const JuryMember& juryMember) throw(int);
-    const JuryMember& operator[](int index) const throw(int);
-    JuryMember& operator[](int index) throw(int);
+    const JuryMember& operator[](int index) const throw(const char*);
+    JuryMember& operator[](int index) throw(const char*);
 
-    virtual void toOs(ostream& os) const ;
+	bool operator==(const Jury& other) const;
+    friend ostream& operator<<(ostream& os, const Jury& jury);
 };
-const int Jury::DEFAULT_MAX_NUM_OF_JURY_MEMBERS;
 #endif

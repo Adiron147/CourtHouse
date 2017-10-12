@@ -1,12 +1,16 @@
 #include "Party.h"
 
-void Party::setName(const char *name)
+void Party::setName(const char *name) throw(const char*)
 {
 	delete []this->name;
-	if(name != nullptr)
+	if(name == nullptr)
 	{
-		this->name = new char[strlen(name) + 1];
-		strcpy(this->name, name);
+		throw("Party name can't be null");
+	}
+	else
+	{
+ 		this->name = new char[strlen(name) + 1];
+ 		strcpy(this->name, name);
 	}
 }
 void Party::setSide(Party::ePartySide side)
@@ -45,10 +49,10 @@ inline  Party::ePartyType  Party::getType() const
 	return this->type;
 }
 
-void  Party::setLawyer(const Lawyer& lawyer)
-{
-	this->lawyer = lawyer;
-}
+//void  Party::setLawyer(const Lawyer& lawyer)
+//{
+//	this->lawyer = lawyer;
+//}
 inline const Lawyer& Party::getLawyer() const
 {
 	return this->lawyer;
@@ -59,7 +63,14 @@ bool Party::operator==(const Party& other) const
 	return (strcmp(this->name, other.getName()) && this->side == other.getType() && this->type == other.getType() && this->lawyer == other.getLawyer());
 
 }
+
+bool Party::operator!=(const Party& other) const
+{
+	return !(*this == other);
+}
+
  ostream& operator<<(ostream& os, const Party& party)
 {
-	 os << "Party Name: " << party.getName() << ", Side: " << party.getSide() << ", Type: " << party.getType() << ", Lawyer Name: " << party.getLawyer().getName();
+	os << "Party Name: " << party.name << ", Side: " << party.side << ", Type: " << party.type << ", Lawyer Name: " << party.lawyer.getName();
+	 return os;
 }

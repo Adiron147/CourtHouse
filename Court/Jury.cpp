@@ -1,4 +1,5 @@
 #include "Jury.h"
+#include "JuryMember.h"
 
 Jury::Jury(JuryMember** allJuryMembers, int maxNumOfMembers) throw(const char*) :
 allJuryMembers(nullptr)

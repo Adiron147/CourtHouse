@@ -1,5 +1,19 @@
+Jury:
+operator+= - נמחק
+addJuryMember - פרמטר לא const
+operator[] - זריקה של מחרוזת
+מחיקת toOs והוספת אופרטור << - אין פה בכלל ירושה.
+setJuryMembers - זריקה של מחרוזת
+
+CourtHouse:
+הוספת const לכל ה-getters של מחרוזות
+הוספת זריקה של מחרוזת ב-set של מחרוזות כאשר נותנים null
+מחיקת setNumOfJudges, מיותר.. אפשר לעשות add או remove לשופטים וזהו.
+ctor זורק מחרוזת ולא int
+operator[] - זריקה של מחרוזת
+
 Party:
-setName - הוספת const.
+setName - הוספת const, זריקת exception כאשר השם הוא null
 ctor - הורדת const מעורך דין
 
 CourtRoom:
@@ -19,6 +33,7 @@ prosecution - הפך למצביע מרפרנס
 setDefense - זריקת מחרוזת
 setProsecution - זריקת מחרוזת
 operator=  private
+setStartTime,setEndTime - הפיכה ל-void
 
 CourtWorker:
 setStartingYear - זריקה של מחרוזת
@@ -30,6 +45,8 @@ Person:
 Ctor - זריקה של מחרוזת
 setId - זריקה של מחרוזת
 operator=  private
+setName - זורק שגיאה כשהשם שקיבלנו הוא null
+toOs - הפיכה למתודה אבסטרקטית כדי שהמחלקה כולה תהיה אבסטרקטית.
 
 Judge:
 הוספת כוכבית ל-trials
