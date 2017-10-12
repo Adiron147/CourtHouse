@@ -1,14 +1,14 @@
 #include "Jury.h"
 #include "JuryMember.h"
 
-Jury::Jury(JuryMember** allJuryMembers, int maxNumOfMembers) throw(const char*) :
+Jury::Jury(JuryMember** allJuryMembers, int numOfMembers, int maxNumOfMembers) throw(const char*) :
 allJuryMembers(nullptr)
 {
-	if(this->maxNumOfMembers > 0)
+	if(maxNumOfMembers > 0)
 	{
 		this->maxNumOfMembers = maxNumOfMembers;
 		
-		setJuryMembers(allJuryMembers);
+		setJuryMembers(allJuryMembers, numOfMembers);
 	}
 	else
 	{
@@ -26,11 +26,36 @@ Jury::~Jury()
 	delete []allJuryMembers;
 }
 
-void Jury::setJuryMembers(JuryMember** allJuryMembers) throw(const char*)
+void Jury::setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(const char*)
 {
 	if(allJuryMembers != nullptr)
 	{
-		this->allJuryMembers = allJuryMembers;
+		if(numOfMembers > 0 )
+		{
+			if(numOfMembers <= this->maxNumOfMembers)
+			{
+				if(this->allJuryMembers != nullptr)
+				{
+					for(int i = 0; i < this->numOfMembers; i++)
+					{
+						delete allJuryMembers[i];
+					}
+				}
+
+				delete []this->allJuryMembers;
+
+				this->allJuryMembers = allJuryMembers;
+				this->numOfMembers = numOfMembers;
+			}
+			else
+			{
+				throw("The number of jury members has exceed the maximum allowed!");
+			}
+		}
+		else
+		{
+			throw("The number of members in the jury must be positive!");
+		}
 	}
 	else
 	{
@@ -145,9 +170,10 @@ ostream& operator<<(ostream& os, const Jury& jury)
 	}
 	else
 	{
+		os << endl;
 		for(int i = 0; i < jury.numOfMembers; i++)
 		{
-			os << jury.allJuryMembers[i] << endl;
+			os << *jury.allJuryMembers[i] << endl;
 		}
 	}
 

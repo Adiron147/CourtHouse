@@ -27,10 +27,10 @@ public:
 	CourtRoom();
 	~CourtRoom();
 
-	inline int getRoomNumber() const;
+	inline int getRoomNumber() const {return roomNumber;}
 	// not allowing setRoomNumber because using the serial number
 
-	inline int getNumOfTrials() const;
+	inline int getNumOfTrials() const {return numOfTrials;}
 	// not allowing setNumOfTrials because need to be updated with the addTrial method
 
 	inline Trial** getAllTrials() const;

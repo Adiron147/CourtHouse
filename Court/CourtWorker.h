@@ -7,7 +7,7 @@ class CourtWorker : virtual public Person
 {
 
 private:
-	static const int MAX_STARTING_YEAR = 1999;
+	static const int MAX_STARTING_YEAR = 2004;
 	static const int MIN_STARTING_YEAR = 1920;
 
     int startingYear;

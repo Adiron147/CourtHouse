@@ -1,84 +1,107 @@
 #include "TmUtilities.h"
-#include <stdlib.h>
-#include <string.h>
 
 bool TmUtilities::doesColide(const tm& firstStart, const tm& firstEnd, const tm& secondStart, const tm& secondEnd)
 {
 	// Assuming not coliding
 	bool result = false;
 
-	tm *firstStartCloned = cloneTm(firstStart);
-	tm *secondStartCloned = cloneTm(secondStart);
-	tm *firstEndCloned = cloneTm(firstEnd);
-	tm *secondEndCloned = cloneTm(secondEnd);
-
-	time_t firstStartTime = mktime(firstStartCloned);
-	time_t secondStartTime = mktime(secondStartCloned);
-	time_t firstEndTime = mktime(firstEndCloned);
-	time_t secondEndTime = mktime(secondEndCloned);
-
-	if(difftime(secondStartTime, firstStartTime) >= 0)
+	if(compareTimes(secondStart, firstStart) == TmUtilities::FIRST_LARGER || 
+		compareTimes(secondStart, firstStart) == TmUtilities::EQUALS)
 	{
-		if(difftime(secondStartTime, firstEndTime) < 0)
+		if(compareTimes(secondStart, firstEnd) == TmUtilities::SECOND_LARGER)
 		{
 			result = true;
 		}
 	}
 	else
 	{
-		if(difftime(firstStartTime, secondEndTime) < 0)
+		if(compareTimes(firstStart, secondEnd) == TmUtilities::SECOND_LARGER)
 		{
 			result = true;
 		}
 	}
-
-	free(firstStartCloned );
-	free(secondStartCloned);
-	free(firstEndCloned);
-	free(secondEndCloned);
 
 	return result;
 }
 
 bool TmUtilities::isEquals(const tm& first, const tm& second)
 {
-	return memcmp(&first, &second, sizeof(tm)) == 0;
+	return compareTimes(first,second) == TmUtilities::EQUALS;
 }
 
 void TmUtilities::tmToOs(ostream& os, const tm& time)
 {
-	char *tmAsStr = asctime(&time);
-	os << tmAsStr;
-
-	delete []tmAsStr;
-}
-
-tm* TmUtilities::cloneTm(const tm& toClone)
-{
-	tm *cloned = (tm*)malloc(sizeof(tm));
-
-	if(cloned == NULL)
+	os << time.tm_mday << "." << time.tm_mon << "." << time.tm_year << "  ";
+	if(time.tm_hour < 10)
 	{
-		exit(0);
+		os << "0";
 	}
 
-	memcpy(cloned,&toClone,sizeof(tm));
-
-	return cloned;
+	os << time.tm_hour << ":" << "00";
 }
 
-double TmUtilities::tmDiff(const tm& firstTm, const tm& secondTm)
+// Comparing the two given times:
+// 1. If the first time is later than the second, FIRST_LARGER will be returned.
+// 2. If the second time is later than the first, SECOND_LARGER will be returned.
+// 3. if both times are equal, EQUALS will be returned.
+int TmUtilities::compareTimes(const tm& firstTm, const tm& secondTm)
 {
-	tm *firstCloned = cloneTm(firstTm);
-	tm *secondCloned = cloneTm(secondTm);
+	int firstDiffProperty, secondDiffProperty;
+	// Assuming first larger
+	int result = TmUtilities::FIRST_LARGER;
 
-	time_t firstTime = mktime(firstCloned);
-	time_t secondTime = mktime(secondCloned);
+	// Checking if the two given times 
+	// share the same year, month, day, hour
+	// (if not filling firstNotEqualProperty, secondNotEqualProperty 
+	// with the first not equal property):
 
-	double diff = difftime(firstTime, secondTime);
+	if(firstTm.tm_year == secondTm.tm_year)
+	{
+		if(firstTm.tm_mon == secondTm.tm_mon)
+		{
+			if(firstTm.tm_mday == secondTm.tm_mday)
+			{
+				if(firstTm.tm_hour == secondTm.tm_hour)
+				{
+					// All parameters are the same
+					result = TmUtilities::EQUALS;
+				}
+				else
+				{
+					firstDiffProperty = firstTm.tm_hour;
+					secondDiffProperty = secondTm.tm_hour;
+				}
+			}
+			else
+			{
+				firstDiffProperty = firstTm.tm_mday;
+				secondDiffProperty = secondTm.tm_mday;
+			}
+		}
+		else
+		{
+			firstDiffProperty = firstTm.tm_mon;
+			secondDiffProperty = secondTm.tm_mon;
+		}
+	}
+	else
+	{
+		firstDiffProperty = firstTm.tm_year;
+		secondDiffProperty = secondTm.tm_year;
+	}
 
-	free(firstCloned);
-	free(secondCloned);
+	// If the two times are not the same
+	if(result != TmUtilities::EQUALS)
+	{
+		if(firstDiffProperty > secondDiffProperty)
+		{
+			result = TmUtilities::FIRST_LARGER;
+		}
+		else
+		{
+			result = TmUtilities::SECOND_LARGER;
+		}
+	}
 
-	return diff;
+	return result;
 }

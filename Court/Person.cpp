@@ -43,16 +43,6 @@
  	}
  }
  
- inline const char* Person::getName() const
- {
- 	return name;
- }
- 
- inline int Person::getId() const
- {
- 	return id;
- }
- 
  bool Person::operator==(const Person& other) const
  {
 	return strcmp(other.name,this->name) && (other.id == this->id);

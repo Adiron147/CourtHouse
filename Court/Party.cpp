@@ -1,5 +1,8 @@
 #include "Party.h"
 
+const char* strPartySide[] = {"Defense", "Prosecution"};
+const char* strPartyType[] = {"Single Person", "Organization", "State"};
+
 void Party::setName(const char *name) throw(const char*)
 {
 	delete []this->name;

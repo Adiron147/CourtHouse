@@ -20,10 +20,10 @@ private:
     void setNumOfMembers(int numOfMembers);
 
 public:
-    Jury(JuryMember** allJuryMembers, int maxNumOfMembers = DEFAULT_MAX_NUM_OF_JURY_MEMBERS) throw(int,const char*);// maxNumOfMembers must be a non-zero positive, "allJuryMembers" cannot be a nullptr
+    Jury(JuryMember** allJuryMembers, int numOfMembers, int maxNumOfMembers = DEFAULT_MAX_NUM_OF_JURY_MEMBERS) throw(int,const char*);// maxNumOfMembers must be a non-zero positive, "allJuryMembers" cannot be a nullptr
     ~Jury();
 
-    void setJuryMembers(JuryMember** allJuryMembers) throw(const char*);
+    void setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(const char*);
 
     inline int getNumOfJuryMembers() const;
 

@@ -2,7 +2,8 @@
 #define __TRIAL_H
 
 #include <ctime>
-#include "Judge.h"
+#include <iostream>
+using namespace std;
 
 class Party;
 class Jury;
@@ -14,7 +15,7 @@ class Trial
 public:
 	static const int NUM_OF_TYPES = 8;
 	enum eTrialSubject{CRIMINAL, YOUTH, CIVIL, PROPERTY, FAMILY, CLASS_ACTION, TRANSPORTATION, CONTRACTS};
-	//static const char* strTrialSubject[];
+	static const char* strTrialSubject[];
 
 private:
 	static int ID;
@@ -40,13 +41,13 @@ public:
 		  CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*);
 	~Trial();
 
-	inline int getTrialId() const;
+	inline int getTrialId() const {return trialId;}
 
 	void setStartTime(const tm& startTime) throw(const char*);
-	inline const tm& getStartTime() const;
+	inline const tm& getStartTime() const {return startTime;}
 
 	void setEndTime(const tm& endTime) throw(const char*);
-	inline const tm& getEndTime() const;
+	inline const tm& getEndTime() const {return endTime;}
 
 	eTrialSubject getSubject() const;
 
@@ -68,9 +69,6 @@ public:
 	bool operator==(const Trial& other) const;
 	bool operator!=(const Trial& other) const;
 	friend ostream& operator<<(ostream& os, const Trial& trial);
-	
 };
-
-//const char* Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
 
 #endif

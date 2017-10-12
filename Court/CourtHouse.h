@@ -15,26 +15,24 @@ private:
 	char* state;
 	char* city;
 	char* name;
-	int maxNumOfCourtRooms;
 	size_t numOfCourtRooms; //positive integers
 	size_t numOfJudges;
-	CourtRoom** allCourtRooms;
+	CourtRoom* allCourtRooms;
 	Judge** allJudges;
 
 	CourtHouse(const CourtHouse& otherCourtHouse);
 	void setName(const char* name) throw(const char*);
-	//void setMaxNumOfCourtRooms(int num);
 	const CourtHouse& operator=(const CourtHouse& otherCourtHouse);
 
 public:
     //throws the number of court rooms if it is negative
-	CourtHouse(const char* state, const char* city, const char* name, int maxNumOfCourtRooms = 1) throw(const char*);
+	CourtHouse(const char* state, const char* city, const char* name, int numOfCourtRooms = 1) throw(const char*);
 	~CourtHouse();
 
-	void setState(const char* state) throw(const char*);;
+	void setState(const char* state) throw(const char*);
 	inline const char* getState() const;
 
-	void setCity(const char* city) throw(const char*);;
+	void setCity(const char* city) throw(const char*);
 	inline const char* getCity() const;
 
 	inline const char* getName() const;
@@ -46,13 +44,10 @@ public:
     Judge* getJudgeByName(const char* name);
     inline int getNumOfJudges() const;
 
-    inline int getNumOfCourtRooms() const;
-    void addCourtRoom(CourtRoom& room) throw(const char*); //throws a message if the addition is inccorrect (when trying to add while the numOfCourtRooms already exceeded)
-	bool removeCourtRoom(int roomNumber);
+	inline int getNumOfCourtRooms() const {return numOfCourtRooms;}
 
 	friend ostream& operator<<(ostream& os, const CourtHouse& court);
 	CourtRoom& operator[](int index) throw(const char*);
 	const CourtRoom& operator[](int index) const throw(const char*);
-
 };
 #endif

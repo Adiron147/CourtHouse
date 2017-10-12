@@ -1,30 +1,35 @@
 #include "Trial.h"
 #include "TmUtilities.h"
 #include "Party.h"
-#include "CourtRoom.h"
 #include "Jury.h"
+#include "CourtRoom.h"
+#include "Judge.h"
 
+const char* Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
 int Trial::ID = 0;
 
 // TODO: Check if we are using all set methods
 
 //judge shouldn't be busy, room shouldn't be taken and defense != prosecution
 Trial::Trial(eTrialSubject subject, Judge& judge, Party& defense, Party& prosecution,
-		CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*)
+		CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*) : 
+defense(nullptr), prosecution(nullptr), trialRoom(nullptr), jury(nullptr), judge(nullptr)
 {
+	trialId=++ID;
+
 	// TODO: already initiated judge... Is it ok?
 	setJudge(&judge);
 	setDefense(defense);
 	setProsecution(prosecution);
-	setStartTime(startTime);
+	// Setting start time as it is cause at this point 
+	// there is no end time to check validation with
+	this->startTime = startTime;
 	setEndTime(endTime);
 	setSubject(subject);
 	setTrialRoom(trialRoom);
 
 	// Still no jury
 	setJury(nullptr);
-
-	trialId=++ID;
 }
 
 Trial::~Trial()
@@ -42,7 +47,7 @@ void Trial::setSubject(eTrialSubject subject)
 void Trial::setDefense(Party& defense)  throw(const char*)
 {
 	// TODO: implement != on party
-	if(defense != *prosecution)
+	if(prosecution == nullptr || defense != *prosecution)
 	{
 		delete this->defense;
 		this->defense = &defense;
@@ -56,7 +61,7 @@ void Trial::setDefense(Party& defense)  throw(const char*)
 void Trial::setProsecution(Party& prosecution)  throw(const char*)
 {
 	// TODO: implement != on party
-	if(*defense != prosecution)
+	if(defense == nullptr || *defense != prosecution)
 	{
 		delete this->prosecution;
 		this->prosecution = &prosecution;
@@ -67,14 +72,9 @@ void Trial::setProsecution(Party& prosecution)  throw(const char*)
 	}
 }
 
-inline int Trial::getTrialId() const
-{
-	return trialId;
-}
-
 void Trial::setStartTime(const tm& startTime) throw(const char*)
 {
-	if(TmUtilities::tmDiff(this->endTime, startTime) > 0 )
+	if(TmUtilities::compareTimes(this->endTime, startTime) == TmUtilities::FIRST_LARGER )
 	{
 		this->startTime = startTime;
 	}
@@ -84,14 +84,9 @@ void Trial::setStartTime(const tm& startTime) throw(const char*)
 	}
 }
 
-inline const tm& Trial::getStartTime() const
-{
-	return startTime;
-}
-
 void Trial::setEndTime(const tm& endTime) throw(const char*)
 {
-	if(TmUtilities::tmDiff(endTime, this->startTime) > 0 )
+	if(TmUtilities::compareTimes(endTime, this->startTime) == TmUtilities::FIRST_LARGER )
 	{
 		this->endTime = endTime;
 	}
@@ -99,11 +94,6 @@ void Trial::setEndTime(const tm& endTime) throw(const char*)
 	{
 		throw("Trial end time can not be earlier than start time");
 	}
-}
-
-inline const tm& Trial::getEndTime() const
-{
-	return endTime;
 }
 
 Trial::eTrialSubject Trial::getSubject() const
@@ -134,7 +124,7 @@ inline const Jury* Trial::getJury() const
 
 void Trial::setJudge(Judge* judge) throw(const char*)
 {
-	if(judge != nullptr)
+	if(judge == nullptr)
 	{
 		throw("Every trial must have a judge (judge can not be null)!");
 	}
@@ -146,7 +136,12 @@ void Trial::setJudge(Judge* judge) throw(const char*)
 		}
 		else
 		{
+			if(this->judge != nullptr)
+			{
+				this->judge->removeTrial(this->trialId);
+			}
 			this->judge = judge;
+			judge->addTrial(*this);
 		}	
 	}
 }
@@ -164,13 +159,15 @@ void Trial::setTrialRoom(CourtRoom& trialRoom) throw(const char*)
 	}
 	else
 	{
-		if(this->trialRoom != nullptr)
+		if(this->trialRoom != &trialRoom)
 		{
-			this->trialRoom->removeTrial(this->trialId);
-		}
+			if(this->trialRoom != nullptr)
+			{
+				this->trialRoom->removeTrial(this->trialId);
+			}
 
-		trialRoom.addTrial(*this);
-		this->trialRoom = &trialRoom;
+			this->trialRoom = &trialRoom;
+		}
 	}
 }
 
@@ -220,21 +217,22 @@ bool Trial::operator!=(const Trial& other) const
 
 ostream& operator<<(ostream& os, const Trial& trial)
 {
-	os << "Trial id = " << trial.trialId << endl <<
+	os << "Trial id = " << trial.trialId <<
 		" start: ";
 	
 	TmUtilities::tmToOs(os, trial.startTime);
 
-	os << endl << " end: ";
+	os << " end: ";
 
 	TmUtilities::tmToOs(os, trial.endTime);
 
-	os << endl << " subject: " <<trial.subject << endl <<
-		" Judge: " << trial.judge << endl;
+	os << " subject: " << Trial::strTrialSubject[trial.subject] <<
+		" Judge: " << *trial.judge;
 	
 	if(trial.hasJury())
 	{
-		os << " has jury" << endl;
+		os << " has jury: " << endl;
+		os << *trial.jury;
 	}
 	else
 	{

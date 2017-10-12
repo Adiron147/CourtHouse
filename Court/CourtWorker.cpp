@@ -1,5 +1,4 @@
 #include "CourtWorker.h"
-#include "CourtHouse.h"
 
 // TODO: Check if throwing from person works
 CourtWorker::CourtWorker(const char* name, int id, int startingYear, int salary) throw(char*)
@@ -12,7 +11,7 @@ CourtWorker::CourtWorker(const char* name, int id, int startingYear, int salary)
 
 void CourtWorker::setStartingYear(int startingYear) throw(char*)
 {
-	if(startingYear > MIN_STARTING_YEAR && startingYear < MAX_STARTING_YEAR )
+	if(startingYear >= MIN_STARTING_YEAR && startingYear <= MAX_STARTING_YEAR )
 	{
 		this->startingYear = startingYear;
 	}

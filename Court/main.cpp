@@ -176,9 +176,9 @@ void insertTrialsToCourtHouse(CourtHouse& courtHouse)
                 Party prosecution ("Prosecutor",Party::PROSECUTION, Party::SINGLE_PERSON, Lawyer("Prosecution Lawyer", 10+i, "Harvard", 1980+i+1));
                 if(!courtHouse[i].isTaken(start,end) && !(*courtHouse.getJudgeByName(name)).isBusy(start,end))
                 {
-                    Trial trial((Trial::eTrialSubject) (i & numOfTypes), *judge, defense, prosecution, courtHouse[i], start, end);
+                    Trial* currTrial = new Trial((Trial::eTrialSubject) (i & numOfTypes), *judge, defense, prosecution, courtHouse[i], start, end);
 
-                    courtHouse[i].addTrial(trial);
+                    courtHouse[i].addTrial(*currTrial);
                 }
                 start.tm_hour++;
                 end.tm_hour++;
@@ -228,7 +228,7 @@ void showAllJudges(const CourtHouse& courtHouse)
 
     for( int i = 0 ; i < size ; i++)
     {
-        cout << courtHouse[i] << endl;
+        cout << *allJudges[i] << endl;
     }
 }
 
@@ -291,7 +291,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 {
     int size = court.getNumOfCourtRooms();
 
-    //cout << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
+    cout << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         int numOfTrials = court[i].getNumOfTrials();

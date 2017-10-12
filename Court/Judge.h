@@ -30,6 +30,7 @@ public:
 
     const Trial* getTrialById(int id) const;
     void addTrial(Trial& trial) throw(const char*); //throws exception if the judge isBusy(tm,tm)
+	void removeTrial(int trialId);
     bool isBusy(const tm& startTime, const tm& endTime) const;
 
     void operator += (Trial& trial) throw(const char*);

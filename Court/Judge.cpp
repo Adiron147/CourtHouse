@@ -1,6 +1,5 @@
 #include "Judge.h"
 #include "Trial.h"
-#include <ctime>
 #include "TmUtilities.h"
 
 Judge::Judge(const char* name, int id, //Person
@@ -57,13 +56,48 @@ void Judge::addTrial(Trial& trial) throw(const char*)
 		}
 
 		// No need for the old array anymore
-		delete trials;
+		delete []this->trials;
 
-		updatedTrials[++numOfTrials] = &trial;
+		updatedTrials[numOfTrials] = &trial;
+
+		++numOfTrials;
 
 		trials = updatedTrials;
 	}
 }//throws exception if the judge isBusy(tm,tm)
+
+void Judge::removeTrial(int trialId)
+{
+	if(getTrialById(trialId) != nullptr)
+	{
+		if(numOfTrials > 0)
+		{
+			Trial** updatedTrials = new Trial*[numOfTrials - 1];
+		
+			Trial* removedTrial = nullptr;
+
+			// Coppying all the other trials:
+
+			int updatedTrialsIndex = 0, oldTrialsIndex = 0;
+
+			while(updatedTrialsIndex < numOfTrials - 1)
+			{
+				if(trials[oldTrialsIndex]->getTrialId() != trialId)
+				{
+					updatedTrials[updatedTrialsIndex] = trials[oldTrialsIndex];
+					++updatedTrialsIndex;
+				}
+
+				++oldTrialsIndex;
+			}
+
+			// No need for the old array anymore
+			delete []this->trials;
+
+			trials = updatedTrials;
+		}
+	}
+}
 
 bool Judge::isBusy(const tm& startTime, const tm& endTime) const
 {
@@ -90,5 +124,6 @@ void Judge::operator+=(Trial& trial) throw(const char*)
 void Judge::toOs(ostream &os) const
 {
 	Lawyer::toOs(os);
+	os << " ";
 	CourtWorker::toOs(os);
 }

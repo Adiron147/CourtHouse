@@ -21,18 +21,6 @@ CourtRoom::~CourtRoom()
 	delete []allTrials;
 }
 
-inline int CourtRoom::getRoomNumber() const
-{
-	return roomNumber;
-}
-// not allowing setRoomNumber because using the serial number
-
-inline int CourtRoom::getNumOfTrials() const
-{
-	return numOfTrials;
-}
-// not allowing setNumOfTrials because need to be updated with the addTrial method
-
 // TODO: Do we need it? maybe not safe... consider not implementing
 inline Trial** CourtRoom::getAllTrials() const
 {
@@ -77,7 +65,9 @@ void CourtRoom::addTrial(Trial& trial) throw(const char*)
 
 		trial.setTrialRoom(*this);
 
-		updatedTrials[++numOfTrials] = &trial;
+		updatedTrials[numOfTrials] = &trial;
+
+		++numOfTrials;
 
 		allTrials = updatedTrials;
 	}
@@ -161,7 +151,7 @@ Trial& CourtRoom::operator[](int index) throw(const char*)
 
 const Trial& CourtRoom::operator[](int index) const throw(const char*)
 {
-	if (index > 0 && index < numOfTrials)
+	if (index >= 0 && index < numOfTrials)
 	{
 		return *(this->allTrials[index]);
 	}

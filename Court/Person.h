@@ -21,9 +21,9 @@ public:
     Person(const char* name, int id) throw(const char*);
     virtual ~Person();
 
-	inline const char* getName() const;
+	inline const char* getName() const {return name;}
 
-	inline int getId() const;
+	inline int getId() const {return id;}
 
 	bool operator==(const Person& other) const;
 	friend ostream& operator<<(ostream& os, const Person& person);

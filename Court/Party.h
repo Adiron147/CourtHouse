@@ -13,8 +13,8 @@ public:
     enum ePartySide {DEFENSE, PROSECUTION};
     enum ePartyType {SINGLE_PERSON, ORGANIZATION, STATE};
 
-    //static const char* strPartySide[];
-    //static const char* strPartyType[];
+    static const char* strPartySide[];
+    static const char* strPartyType[];
 
 private:
     char* name;
@@ -46,7 +46,6 @@ public:
 	bool operator!=(const Party& other) const;
     friend ostream& operator<<(ostream& os, const Party& party);
 };
-//const char* strPartySide[] = {"Defense", "Prosecution"};
-//const char* strPartyType[] = {"Single Person", "Organization", "State"};
+//
 
 #endif

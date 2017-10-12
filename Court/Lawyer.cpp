@@ -5,7 +5,7 @@ Lawyer::Lawyer(const char* name, int id, const char* academicInstitution, int gr
 	if(academicInstitution != nullptr)
 	{
 		this->academicInstitution = new char[strlen(academicInstitution) + 1];
- 		strcpy(this->academicInstitution, name);
+ 		strcpy(this->academicInstitution, academicInstitution);
 	}
 	else
 	{
