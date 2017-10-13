@@ -5,7 +5,6 @@
 CourtHouse::CourtHouse(const char* state, const char* city, const char* name, int numOfCourtRooms) throw(const char*) : 
 name(nullptr), city(nullptr), state(nullptr), allJudges(nullptr), allCourtRooms(nullptr)
 {
-	// TODO:
 	if(numOfCourtRooms < 0)
 	{
 		throw("Number of court rooms must be a positive number");
@@ -156,12 +155,6 @@ void CourtHouse::addJudge(Judge* judge) throw(const char*) //throws a message if
 inline int CourtHouse::getNumOfJudges() const
 {
 	return this->numOfJudges;
-}
-
-// TODO: delete? not safe...
-Judge** CourtHouse::getAllJudges()
-{
-	return this->allJudges;
 }
 
 ostream& operator<<(ostream& os, const CourtHouse& court)

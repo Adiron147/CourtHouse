@@ -15,7 +15,7 @@ private:
 	void setName(const char* name) throw(const char*);
     void setId(int id) throw(const char*);
 	
-	virtual const Person& operator=(const Person& other);
+	const Person& operator=(const Person& other);
 
 public:
     Person(const char* name, int id) throw(const char*);

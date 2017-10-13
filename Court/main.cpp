@@ -34,7 +34,7 @@ void showAvailableRoomsForTrialsInACertainHour(const CourtHouse& court, tm& star
 
 void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject);
 
-//void freeCourtHouse(CourtHouse* courtHouse);
+void freeCourtHouse(CourtHouse* courtHouse);
 
 int main() 
 {
@@ -89,7 +89,7 @@ int main()
 
         showTrialsBySubject(*courtHouse, Trial::CRIMINAL);
 
-        //freeCourtHouse(courtHouse);
+        freeCourtHouse(courtHouse);
         
     }
     catch(...)
@@ -172,11 +172,11 @@ void insertTrialsToCourtHouse(CourtHouse& courtHouse)
             if(judge != nullptr)
             {
           
-                Party defense("Defendant", Party::DEFENSE, Party::SINGLE_PERSON, Lawyer("Defense Lawyer", 10+i, "Yale", 1980+i));
-                Party prosecution ("Prosecutor",Party::PROSECUTION, Party::SINGLE_PERSON, Lawyer("Prosecution Lawyer", 10+i, "Harvard", 1980+i+1));
+                Party *defense = new Party("Defendant", Party::DEFENSE, Party::SINGLE_PERSON, "Defense Lawyer", 10+i, "Yale", 1980+i);
+                Party *prosecution =new Party("Prosecutor",Party::PROSECUTION, Party::SINGLE_PERSON, "Prosecution Lawyer", 10+i, "Harvard", 1980+i+1);
                 if(!courtHouse[i].isTaken(start,end) && !(*courtHouse.getJudgeByName(name)).isBusy(start,end))
                 {
-                    Trial* currTrial = new Trial((Trial::eTrialSubject) (i & numOfTypes), *judge, defense, prosecution, courtHouse[i], start, end);
+                    Trial* currTrial = new Trial((Trial::eTrialSubject) (i & numOfTypes), *judge, *defense, *prosecution, courtHouse[i], start, end);
 
                     courtHouse[i].addTrial(*currTrial);
                 }
@@ -306,37 +306,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 
 }
 
-/*void freeCourtHouse(CourtHouse* courtHouse)
+void freeCourtHouse(CourtHouse* courtHouse)
 {
-    int numOfJudges = courtHouse->getNumOfJudges();
-    int numOfRooms = courtHouse->getNumOfCourtRooms();
-    Judge** allJudges = courtHouse->getAllJudges();
-
-    for(int i = 0 ; i < numOfJudges ; i++)
-    {
-        delete allJudges[i];
-    }
-    delete[] allJudges;
-
-    for(int i = 0 ; i < numOfRooms ; i++)
-    {
-        int numOfTrials = (*courtHouse)[i].getNumOfTrials();
-        for(int j = 0 ; j < numOfTrials; j++)
-        {
-            Trial& trial = (*courtHouse)[i][j];
-            if(trial.hasJury())
-            {
-                const Jury* jury = trial.getJury();
-                int numOfJuryMembers = jury->getNumOfJuryMembers();
-                const JuryMember** juryMembers = jury->getAllJuryMembers();
-                for(int k = 0 ; k < numOfJuryMembers ; k++)
-                {
-                    delete juryMembers[k];
-                }
-                delete[] juryMembers;
-                delete jury;
-            }
-        }
-    }
     delete courtHouse;
-}*/
+}

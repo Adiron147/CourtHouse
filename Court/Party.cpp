@@ -25,7 +25,9 @@ void Party::setType(Party::ePartyType type)
 	this->type = type;
 }
 
-Party::Party(const char* name, Party::ePartySide side, Party::ePartyType type, Lawyer& lawyer): name(nullptr), lawyer(lawyer)
+Party::Party(const char* name, ePartySide side, ePartyType type, const char* lawyerName, 
+	int lawyerId, const char* lawyerInstitution, int lawyerGradYear)throw(const char*): 
+name(nullptr), lawyer(lawyerName,lawyerId,lawyerInstitution,lawyerGradYear)
 {
 	setName(name);
 	setSide(side);
@@ -52,10 +54,6 @@ inline  Party::ePartyType  Party::getType() const
 	return this->type;
 }
 
-//void  Party::setLawyer(const Lawyer& lawyer)
-//{
-//	this->lawyer = lawyer;
-//}
 inline const Lawyer& Party::getLawyer() const
 {
 	return this->lawyer;

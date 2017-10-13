@@ -10,8 +10,9 @@ private:
     char* academicInstitution;
     int graduatedYear;
 
-    Lawyer(const Lawyer& other);
+    
 	const Lawyer& operator=(const Lawyer& other);
+	Lawyer(const Lawyer& other);
 public:
     Lawyer(const char* name, int id, const char* academicInstitution, int graduatedYear)throw(const char*);
     ~Lawyer();

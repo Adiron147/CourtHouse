@@ -8,8 +8,6 @@
 const char* Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
 int Trial::ID = 0;
 
-// TODO: Check if we are using all set methods
-
 //judge shouldn't be busy, room shouldn't be taken and defense != prosecution
 Trial::Trial(eTrialSubject subject, Judge& judge, Party& defense, Party& prosecution,
 		CourtRoom& trialRoom, const tm& startTime, const tm& endTime) throw(const char*) : 
@@ -17,7 +15,6 @@ defense(nullptr), prosecution(nullptr), trialRoom(nullptr), jury(nullptr), judge
 {
 	trialId=++ID;
 
-	// TODO: already initiated judge... Is it ok?
 	setJudge(&judge);
 	setDefense(defense);
 	setProsecution(prosecution);
@@ -46,8 +43,7 @@ void Trial::setSubject(eTrialSubject subject)
 
 void Trial::setDefense(Party& defense)  throw(const char*)
 {
-	// TODO: implement != on party
-	if(prosecution == nullptr || defense != *prosecution)
+	if(prosecution == nullptr || &defense != prosecution)
 	{
 		delete this->defense;
 		this->defense = &defense;
@@ -60,8 +56,7 @@ void Trial::setDefense(Party& defense)  throw(const char*)
 
 void Trial::setProsecution(Party& prosecution)  throw(const char*)
 {
-	// TODO: implement != on party
-	if(defense == nullptr || *defense != prosecution)
+	if(defense == nullptr || defense != &prosecution)
 	{
 		delete this->prosecution;
 		this->prosecution = &prosecution;
@@ -197,7 +192,6 @@ bool Trial::operator==(const Trial& other) const
 				(this->trialRoom != nullptr && *this->trialRoom == *other.trialRoom) ||
 				(other.trialRoom != nullptr && *other.trialRoom == *this->trialRoom))
 			{
-				// TODO: Add jury == and != operators
 				if((this->jury == nullptr && other.jury == nullptr) ||
 					(this->jury != nullptr && *this->jury == *other.jury) ||
 					(other.jury != nullptr && *other.jury == *this->jury))

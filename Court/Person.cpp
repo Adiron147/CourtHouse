@@ -5,11 +5,6 @@
 	setId(id);
  	setName(name);
  }
- 
- const Person& Person::operator=(const Person& other)
- {
-	 throw("Not implemented");
- }
 
  // Virtual
  Person::~Person()

@@ -1,10 +1,10 @@
 Jury:
-operator+= - נמחק
 addJuryMember - פרמטר לא const
 operator[] - זריקה של מחרוזת
 מחיקת toOs והוספת אופרטור << - אין פה בכלל ירושה.
 setJuryMembers - זריקה של מחרוזת
 ctor - הוספת מספר ה-members שבמערך שהביאו, אין דרך לדעת אותו אחרת.
+operator+= - נמחק
 
 CourtHouse:
 הוספת const לכל ה-getters של מחרוזות
@@ -15,6 +15,7 @@ operator[] - זריקה של מחרוזת
 allCourtRooms - הפך חזרה ל* אחת
 מחיקת addCourtRoom - הרי המערך נוצר רק ב-ctor 
     ואז כדי להוסיף עוד איבר צריך להרוס את המערך ולבנות אחד חדש ואז כל החדרים ישוחררו עם כל מה שהיה בתוכם.
+getAllJudges - מחיקה, החזיר לא כ-const ולכן לא בטוח.
 
 Party:
 setName - הוספת const, זריקת exception כאשר השם הוא null
@@ -29,6 +30,7 @@ addTrial - הורדת ה-const במשתנה הקבלה
 operator=  private
 isTaken  - שינוי הפרמטרים כ-ref כדי למנוע שכפול
 operator+= - נמחק
+getAllTrials - מחיקה, החזיר לא כ-const ולכן לא בטוח.
 
 Trial:
 id - אותיות גדולות, אתחול ב-CPP.
@@ -48,19 +50,16 @@ setSalary - זריקה של מחרוזת
 Person:
 Ctor - זריקה של מחרוזת
 setId - זריקה של מחרוזת
-operator=  private
 setName - זורק שגיאה כשהשם שקיבלנו הוא null
 toOs - הפיכה למתודה אבסטרקטית כדי שהמחלקה כולה תהיה אבסטרקטית.
 
 Judge:
 הוספת כוכבית ל-trials
-operator=  private
 getAllTrials - מחיקה
 הוספת removeTrial.
 
 CourtRoom:
 הוספת כוכבית ל-trials
-operator=  private
 
 כל הקבצים:
 operator= הופך ל-private

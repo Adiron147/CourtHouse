@@ -33,8 +33,6 @@ public:
 	inline int getNumOfTrials() const {return numOfTrials;}
 	// not allowing setNumOfTrials because need to be updated with the addTrial method
 
-	inline Trial** getAllTrials() const;
-
 	void addTrial(Trial& trial) throw(const char*); //throws exception if the room isTaken(tm,tm)
 	void removeTrial(int trialId) throw(const char*); //throws an exception if trialId doesn't exist
 	bool isTaken(const tm& startTime, const tm& endTime) const;

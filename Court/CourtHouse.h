@@ -38,7 +38,6 @@ public:
 	inline const char* getName() const;
 
     void addJudge(Judge* judge) throw(const char*); //throws a message if "judge" is a nullptr or already in the court house system
-    Judge** getAllJudges();
 	const Judge*const* getAllJudges() const { return allJudges;}
 	const Judge* getJudgeByName(const char* name) const ;
     Judge* getJudgeByName(const char* name);

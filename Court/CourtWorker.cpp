@@ -1,6 +1,5 @@
 #include "CourtWorker.h"
 
-// TODO: Check if throwing from person works
 CourtWorker::CourtWorker(const char* name, int id, int startingYear, int salary) throw(char*)
 	: Person(name, id)
 {

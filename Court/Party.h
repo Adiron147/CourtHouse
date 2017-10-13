@@ -20,7 +20,7 @@ private:
     char* name;
     ePartySide side;
     ePartyType type;
-    Lawyer& lawyer;
+    Lawyer lawyer;
 
     Party(const Party& other);
     void setName(const char *name) throw(const char*);
@@ -28,7 +28,8 @@ private:
     void setType(ePartyType type);
 	const Party& operator=(const Party& other);
 public:
-    Party(const char* name, ePartySide side, ePartyType type, Lawyer& lawyer);
+    Party(const char* name, ePartySide side, ePartyType type, const char* lawyerName, 
+		int lawyerId, const char* lawyerInstitution, int lawyerGradYear) throw(const char*);
     ~Party();
 
     inline const char* getName() const;

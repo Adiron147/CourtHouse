@@ -21,12 +21,6 @@ CourtRoom::~CourtRoom()
 	delete []allTrials;
 }
 
-// TODO: Do we need it? maybe not safe... consider not implementing
-inline Trial** CourtRoom::getAllTrials() const
-{
-	return allTrials;
-}
-
 int CourtRoom::getTrialIndexById(int trialId) const
 {
 	// Returning TRIAL_NOT_IN_COURT if not belong to the court
@@ -92,7 +86,6 @@ void CourtRoom::removeTrial(int trialId) throw(const char*)
 			this->allTrials[i] = this->allTrials[i+1];
 		}
 
-		// TODO: Maybe it will be used later?
 		// No need for that trial
 		delete removedTrial;
 
