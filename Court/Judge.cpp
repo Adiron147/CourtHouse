@@ -4,7 +4,7 @@
 
 Judge::Judge(const char* name, int id, //Person
         const char* academicInstitution, int graduatedYear, //Lawyer
-        int startingYear, int salary) throw(int): 
+        int startingYear, int salary) throw(const char*): 
 		Person(name, id), 
 		Lawyer(name, id, academicInstitution, graduatedYear),
 		CourtWorker(name, id,startingYear, salary)

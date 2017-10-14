@@ -37,11 +37,6 @@ void CourtWorker::setSalary(int salary) throw(char*)
 	}
 }
 
-inline int CourtWorker::getSalary() const
-{
-	return salary;
-}
-
 void CourtWorker::toOs(ostream &os) const
 {
 	os << "Starting year: " << this->startingYear << 

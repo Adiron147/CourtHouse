@@ -38,7 +38,6 @@ public:
 
     inline ePartyType getType() const;
 
-    //void setLawyer(const Lawyer& lawyer);
     inline const Lawyer& getLawyer() const;
 
 

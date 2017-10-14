@@ -72,6 +72,7 @@ bool Party::operator!=(const Party& other) const
 
  ostream& operator<<(ostream& os, const Party& party)
 {
-	os << "Party Name: " << party.name << ", Side: " << party.side << ", Type: " << party.type << ", Lawyer Name: " << party.lawyer.getName();
+	os << "Party Name: " << party.name << ", Side: " << party.side << 
+		", Type: " << party.type << ", Lawyer: " << party.lawyer;
 	 return os;
 }

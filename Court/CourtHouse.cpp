@@ -167,7 +167,7 @@ ostream& operator<<(ostream& os, const CourtHouse& court)
 	}
 	else
 	{
-		for (int i = 0; i < court.numOfCourtRooms; i++)
+		for (size_t i = 0; i < court.numOfCourtRooms; i++)
 		{
 			os << court.allCourtRooms[i] << endl;
 		}

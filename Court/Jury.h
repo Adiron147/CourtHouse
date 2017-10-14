@@ -18,6 +18,7 @@ private:
     Jury(const Jury& otherJury);
 	const Jury& operator=(const Jury& jury);
     void setNumOfMembers(int numOfMembers);
+	void deleteMembers();
 
 public:
     Jury(JuryMember** allJuryMembers, int numOfMembers, int maxNumOfMembers = DEFAULT_MAX_NUM_OF_JURY_MEMBERS) throw(int,const char*);// maxNumOfMembers must be a non-zero positive, "allJuryMembers" cannot be a nullptr

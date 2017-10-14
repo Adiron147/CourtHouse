@@ -107,9 +107,9 @@ CourtHouse* initCourtHouse()
         CourtHouse* court = new CourtHouse("Israel", "Tel Aviv", "Afeka Court House", size);
         return court;
     }
-    catch (int value)
+    catch (const char* msg)
     {
-        cout << value << " is not a valid number of rooms in the court house" << endl;
+        cout << msg << endl;
 		return NULL;
     }
 	
@@ -236,7 +236,7 @@ void showInformationForJudge(const CourtHouse& court,const char* name)
 {
     const Judge* judge = court.getJudgeByName(name);
     if(judge)
-        cout << *judge << endl;
+        cout << endl<< endl<< "Searched "<< name << " and found: " << endl << *judge << endl;
     else
         cout << "The judge with the name " << name << "was not found";
 }
@@ -255,7 +255,7 @@ void showTrialsByRoomId(const CourtHouse& court, int roomId)
             }
             else
             {
-                cout << "The trials in room #" << roomId << " are: "<< endl;
+                cout << endl << endl << endl << "The trials in room #" << roomId << " are: "<< endl;
                 for(int i = 0 ; i < numOfTrials ; i++)
                 {
                     cout << court[roomId][i] << endl;
@@ -277,7 +277,7 @@ void showAvailableRoomsForTrialsInACertainHour(const CourtHouse& court, tm& star
 {
     int size = court.getNumOfCourtRooms();
 
-    cout << "The rooms that are available at this time are: " << endl;
+    cout << endl << endl << "The rooms that are available at this time are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         if(!court[i].isTaken(start, end))
@@ -291,7 +291,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 {
     int size = court.getNumOfCourtRooms();
 
-    cout << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
+    cout << endl << endl << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         int numOfTrials = court[i].getNumOfTrials();
@@ -299,7 +299,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
         {
             if(court[i][j].getSubject() == subject)
             {
-                cout << court[i][j] << endl;
+                cout << court[i][j] << endl << endl;
             }
         }
     }

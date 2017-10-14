@@ -221,17 +221,19 @@ ostream& operator<<(ostream& os, const Trial& trial)
 	TmUtilities::tmToOs(os, trial.endTime);
 
 	os << " subject: " << Trial::strTrialSubject[trial.subject] <<
-		" Judge: " << *trial.judge;
+		endl << " Judge: " << *trial.judge << endl;
 	
 	if(trial.hasJury())
 	{
-		os << " has jury: " << endl;
 		os << *trial.jury;
 	}
 	else
 	{
-		os << " no jury" << endl ;
+		os << "no jury" << endl ;
 	}
+
+	os << "defense: " << *(trial.defense) << endl << 
+		"prosecution: " << *(trial.prosecution);
 
 	return os;
 }

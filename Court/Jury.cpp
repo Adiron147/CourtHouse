@@ -26,6 +26,16 @@ Jury::~Jury()
 	delete []allJuryMembers;
 }
 
+void Jury::deleteMembers()
+{
+	for(int i = 0; i < numOfMembers; i++)
+	{
+		delete allJuryMembers[i];
+	}
+
+	delete []allJuryMembers;
+}
+
 void Jury::setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(const char*)
 {
 	if(allJuryMembers != nullptr)
@@ -108,6 +118,11 @@ bool Jury::removeJuryMember(int id) throw(const char*)
 
 			isRemoved = true;
 		}
+	}
+
+	if(!isRemoved)
+	{
+		throw("Jury does not contain JuryMember (while removing jury)");
 	}
 
 	return isRemoved;

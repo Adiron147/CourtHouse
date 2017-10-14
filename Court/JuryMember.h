@@ -10,7 +10,7 @@ private:
 	JuryMember(const JuryMember& otherJuryMember);
 
 public:
-	JuryMember(const char* name, int id) throw(int); //id must be a positive integer;
+	JuryMember(const char* name, int id) throw(const char*); //id must be a positive integer;
 
 	virtual void toOs(ostream& os) const override;
 

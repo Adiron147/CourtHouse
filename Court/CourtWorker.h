@@ -23,7 +23,7 @@ public:
     inline int getStartingYear() const;
 
     void setSalary(int salary) throw(char*);
-    inline int getSalary() const;
+	inline int getSalary() const {return salary;}
 
     void toOs(ostream &os) const override;
 };

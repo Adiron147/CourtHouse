@@ -23,7 +23,7 @@ private:
 public:
     Judge(const char* name, int id, //Person
           const char* academicInstitution, int graduatedYear, //Lawyer
-          int startingYear, int salary) throw(int); //CourtWorker
+          int startingYear, int salary) throw(const char*); //CourtWorker
     ~Judge();
 
     inline int getNumOfTrials() const;
