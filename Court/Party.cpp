@@ -1,7 +1,7 @@
 #include "Party.h"
 
-const char* strPartySide[] = {"Defense", "Prosecution"};
-const char* strPartyType[] = {"Single Person", "Organization", "State"};
+const char* Party::strPartySide[] = {"Defense", "Prosecution"};
+const char* Party::strPartyType[] = {"Single Person", "Organization", "State"};
 
 void Party::setName(const char *name) throw(const char*)
 {
@@ -72,7 +72,7 @@ bool Party::operator!=(const Party& other) const
 
  ostream& operator<<(ostream& os, const Party& party)
 {
-	os << "Party Name: " << party.name << ", Side: " << party.side << 
-		", Type: " << party.type << ", Lawyer: " << party.lawyer;
+	os << "Party Name: " << party.name << ", Side: " << Party::strPartySide[party.side] << 
+		", Type: " << Party::strPartyType[party.type] << ", Lawyer: " << party.lawyer;
 	 return os;
 }
