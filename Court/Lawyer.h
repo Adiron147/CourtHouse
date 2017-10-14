@@ -7,17 +7,16 @@ class Lawyer : virtual public Person
 {
 
 private:
-    char* academicInstitution;
+    string academicInstitution;
     int graduatedYear;
 
     
 	const Lawyer& operator=(const Lawyer& other);
 	Lawyer(const Lawyer& other);
 public:
-    Lawyer(const char* name, int id, const char* academicInstitution, int graduatedYear)throw(const char*);
-    ~Lawyer();
+    Lawyer(const string& name, int id, const string& academicInstitution, int graduatedYear)throw(const char*);
 
-    inline const char* getAcademicInstitution() const;
+    inline const string& getAcademicInstitution() const;
 
     inline int getGraduatedYear() const;
 

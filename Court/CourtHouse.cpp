@@ -2,8 +2,29 @@
 #include "Judge.h"
 #include "CourtRoom.h"
 
-CourtHouse::CourtHouse(const char* state, const char* city, const char* name, int numOfCourtRooms) throw(const char*) : 
-name(nullptr), city(nullptr), state(nullptr), allJudges(nullptr), allCourtRooms(nullptr)
+CourtHouse CourtHouse::theCourtHouse;
+
+CourtHouse* CourtHouse::getInstance()
+{
+	return &theCourtHouse;
+}
+
+CourtHouse::CourtHouse() throw(const char*) : allCourtRooms(nullptr), numOfCourtRooms(0){}
+
+CourtHouse::~CourtHouse()
+{
+	vector<Judge*>::iterator  itr    = this->allJudges.begin();
+	vector<Judge*>::iterator  itrEnd = this->allJudges.end();
+
+	for ( ; itr != itrEnd; ++itr)
+	{
+		delete (*itr);
+	}
+	
+	delete []allCourtRooms;
+}
+
+void CourtHouse::setNumberOfCourtRooms(int numOfCourtRooms) throw (const char*)
 {
 	if(numOfCourtRooms < 0)
 	{
@@ -11,113 +32,31 @@ name(nullptr), city(nullptr), state(nullptr), allJudges(nullptr), allCourtRooms(
 	}
 	else
 	{
-		this->numOfCourtRooms = numOfCourtRooms;
-		this->allCourtRooms = new CourtRoom[numOfCourtRooms];
-	}
-
-	try
-	{
-		setState(state);
-		setCity(city);
-		setName(name);
-		this->numOfJudges = 0;
-	}
-	catch(const char* msg)
-	{
-		delete []this->state;
-		delete []this->city;
-		delete []this->name;
-		delete []this->allCourtRooms;
-		
-		throw(msg);
+		// Checking if this method was already called
+		if(this->allCourtRooms == nullptr)
+		{
+			this->numOfCourtRooms = numOfCourtRooms;
+			this->allCourtRooms = new CourtRoom[numOfCourtRooms];
+		}
+		else
+		{
+			throw("CourtHouse setNumberOfCourtRooms was called more than once!");
+		}
 	}
 }
 
-void CourtHouse::setName(const char* name) throw(const char*)
-{
-	delete []this->name;
-
-	if(name == nullptr)
-	{
-		throw("Court name can not be null (setName)");
-	}
-	else
-	{
-		this->name = new char[strlen(name) + 1];
-		strcpy(this->name, name);
-	}
-}
-
-CourtHouse::~CourtHouse()
-{
-	delete[] this->state;
-	delete[] this->city;
-	delete[] this->name;
-
-	for(size_t i = 0; i < numOfJudges; i ++)
-	{
-		delete allJudges[i];
-	}
-
-	delete []allJudges;
-
-	delete []allCourtRooms;
-}
-
-void CourtHouse::setState(const char* state) throw(const char*)
-{
-	delete []this->state;
-
-	if(state == nullptr)
-	{
-		throw("Court state can not be null (setState)");
-	}
-	else
-	{
-		this->state = new char[strlen(state) + 1];
-		strcpy(this->state, state);
-	}
-}
-
-inline const char* CourtHouse::getState() const
-{
-	return this->state;
-}
-
-void CourtHouse::setCity(const char* city) throw(const char*)
-{
-	delete []this->city;
-
-	if(city == nullptr)
-	{
-		throw("Court city can not be null (setCity)");
-	}
-	else
-	{
-		this->city = new char[strlen(city) + 1];
-		strcpy(this->city, city);
-	}
-}
-
-inline const char* CourtHouse::getCity() const
-{
-	return this->city;
-}
-
-inline const char* CourtHouse::getName() const
-{
-	return this->name;
-}
-
-const Judge* CourtHouse::getJudgeByName(const char* name) const
+const Judge* CourtHouse::getJudgeByName(const string& name) const
 {
 	const Judge* foundJudge = nullptr;
 
-	for (size_t i = 0; i < this->numOfJudges; i++)
+	vector<Judge*>::const_iterator  itr    = this->allJudges.begin();
+	vector<Judge*>::const_iterator  itrEnd = this->allJudges.end();
+
+	for ( ; itr != itrEnd; ++itr)
 	{
-		if (strcmp(this->allJudges[i]->getName(), name) == 0)
+		if((*itr)->getName().compare(name) == 0)
 		{
-			foundJudge = this->allJudges[i];
+			foundJudge = *itr;
 		}
 	}
 	
@@ -136,30 +75,18 @@ void CourtHouse::addJudge(Judge* judge) throw(const char*) //throws a message if
 	}
 	else
 	{
-		Judge** enlargedJudges = new Judge*[this->numOfJudges + 1];
-		for (size_t i = 0; i < this->numOfJudges; i++)
-		{
-			enlargedJudges[i] = this->allJudges[i];
-		}
-		
-		enlargedJudges[this->numOfJudges] = judge;
-
-		delete []allJudges;
-		
-		this->allJudges = enlargedJudges;
-
-		++this->numOfJudges;
+		this->allJudges.push_back(judge);
 	}
 }
 
 inline int CourtHouse::getNumOfJudges() const
 {
-	return this->numOfJudges;
+	return this->allJudges.size();
 }
 
 ostream& operator<<(ostream& os, const CourtHouse& court)
 {
-	os << "CourtHouse Name: " << court.getName() << ", CourtHouse State: " << court.getState() << ", CourtHouse City: " << court.getCity() << ", Rooms In CourtHouse:  " << court.getNumOfCourtRooms()
+	os << "CourtHouse " << ", Rooms In CourtHouse:  " << court.getNumOfCourtRooms()
 		<< ", Judges In CourtHouse:  " << court.getNumOfJudges() << "CourtHouse Rooms: ";
 	if(court.numOfCourtRooms == 0)
 	{
@@ -174,29 +101,35 @@ ostream& operator<<(ostream& os, const CourtHouse& court)
 	}
 
 	os << "CourtHouse Judges: ";
-	if(court.numOfJudges == 0)
+	if(court.getNumOfJudges()  == 0)
 	{
 		os << "none yet" << endl;
 	}
 	else
 	{
-		for (size_t i = 0; i < court.numOfJudges; i++)
+		vector<Judge*>::const_iterator  itr    = court.allJudges.begin();
+		vector<Judge*>::const_iterator  itrEnd = court.allJudges.end();
+
+		for ( ; itr != itrEnd; ++itr)
 		{
-			os << court.allJudges[i];
+			os << *(*itr);
 		}
 	}
 	return os;
 }
 
-Judge* CourtHouse::getJudgeByName(const char* name)
+Judge* CourtHouse::getJudgeByName(const string& name)
 {
 	Judge* foundJudge = nullptr;
 
-	for (size_t i = 0; i < this->numOfJudges; i++)
+	vector<Judge*>::iterator  itr    = this->allJudges.begin();
+	vector<Judge*>::iterator  itrEnd = this->allJudges.end();
+
+	for ( ; itr != itrEnd; ++itr)
 	{
-		if (strcmp(this->allJudges[i]->getName(), name) == 0)
+		if((*itr)->getName().compare(name) == 0)
 		{
-			foundJudge = this->allJudges[i];
+			foundJudge = *itr;
 		}
 	}
 	

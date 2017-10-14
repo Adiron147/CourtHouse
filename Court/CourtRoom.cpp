@@ -7,34 +7,44 @@ int CourtRoom::SERIAL_NUMBER = 0;
 CourtRoom::CourtRoom()
 {
 	roomNumber = ++SERIAL_NUMBER;
-	numOfTrials = 0;
-	allTrials = nullptr;
 }
 
 CourtRoom::~CourtRoom()
 {
-	for(int i = 0; i < numOfTrials; i ++)
+	vector<Trial*>::iterator  itr    = allTrials.begin();
+	vector<Trial*>::iterator  itrEnd = allTrials.end();
+	
+	for ( ; itr != itrEnd; ++itr)
 	{
-		delete allTrials[i];
+	    delete *itr;
 	}
-
-	delete []allTrials;
 }
 
-int CourtRoom::getTrialIndexById(int trialId) const
+inline int CourtRoom::getNumOfTrials() const
+{
+	return allTrials.size();
+}
+
+Trial* CourtRoom::getTrialByIndex(int index)
 {
 	// Returning TRIAL_NOT_IN_COURT if not belong to the court
-	int indexOfTrial = CourtRoom::TRIAL_NOT_IN_COURT;
+	vector<Trial*>::iterator  itr    = allTrials.begin();
+	vector<Trial*>::iterator  itrEnd = allTrials.end();
 
-	for(int i = 0; i < numOfTrials; i ++ )
-	{
-		if(this->allTrials[i]->getTrialId() == trialId)
-		{
-			indexOfTrial = i;
-		}
-	}
+	for(int i = 0; itr != itrEnd && i < index; ++i, ++itr );
 
-	return indexOfTrial;
+	return *itr;
+}
+
+const Trial* CourtRoom::getTrialByIndex(int index) const
+{
+	// Returning TRIAL_NOT_IN_COURT if not belong to the court
+	vector<Trial*>::const_iterator  itr    = allTrials.begin();
+	vector<Trial*>::const_iterator  itrEnd = allTrials.end();
+
+	for(int i = 0; itr != itrEnd && i < index; ++i, ++itr );
+
+	return *itr;
 }
 
 void CourtRoom::addTrial(Trial& trial) throw(const char*)
@@ -45,51 +55,33 @@ void CourtRoom::addTrial(Trial& trial) throw(const char*)
 	}
 	else
 	{
-		Trial** updatedTrials = new Trial*[numOfTrials + 1];
-		
-		// Coppying all the old trials:
-
-		for(int i = 0; i < numOfTrials; i ++)
-		{
-			updatedTrials[i] = allTrials[i];
-		}
-
-		// No need for the old array anymore
-		delete []allTrials;
-
 		trial.setTrialRoom(*this);
 
-		updatedTrials[numOfTrials] = &trial;
-
-		++numOfTrials;
-
-		allTrials = updatedTrials;
+		allTrials.push_back(&trial);
 	}
 }//throws exception if the room isTaken(tm,tm)
 
 void CourtRoom::removeTrial(int trialId) throw(const char*)
 {
-	int indexOfTrial = getTrialIndexById(trialId);
+	bool wasTrialFound = false;
+
+	vector<Trial*>::iterator  itr    = allTrials.begin();
+	vector<Trial*>::iterator  itrEnd = allTrials.end();
+	
+	for ( ; itr != itrEnd; ++itr)
+	{
+		if((*itr)->getTrialId() == trialId)
+		{
+			delete *itr;
+			allTrials.erase(itr);
+			wasTrialFound = true;
+		}
+	}
 
 	// Checking if the trial is in the court
-	if(indexOfTrial == CourtRoom::TRIAL_NOT_IN_COURT)
+	if(!wasTrialFound)
 	{
 		throw("Court room does not conatin trial (while removing trial)");
-	}
-	else
-	{	
-		Trial* removedTrial = this->allTrials[indexOfTrial];
-
-		// Shifting all trials one slot left until the end
-		for(int i = indexOfTrial; i < numOfTrials - 1; i++)
-		{
-			this->allTrials[i] = this->allTrials[i+1];
-		}
-
-		// No need for that trial
-		delete removedTrial;
-
-		numOfTrials --;
 	}
 }//throws an exception if trialId doesn't exist
 
@@ -99,9 +91,12 @@ bool CourtRoom::isTaken(const tm& startTime, const tm& endTime) const
 
 	// Checking all trials for collision:
 
-	for(int i = 0; i < numOfTrials; i ++)
+	vector<Trial*>::const_iterator  itr    = allTrials.begin();
+	vector<Trial*>::const_iterator  itrEnd = allTrials.end();
+	
+	for ( ; itr != itrEnd; ++itr)
 	{
-		if(TmUtilities::doesColide(allTrials[i]->getStartTime(), allTrials[i]->getEndTime(), startTime, endTime))
+	    if(TmUtilities::doesColide((*itr)->getStartTime(), (*itr)->getEndTime(), startTime, endTime))
 		{
 			isTaken = true;
 			break;
@@ -113,18 +108,12 @@ bool CourtRoom::isTaken(const tm& startTime, const tm& endTime) const
 
 bool CourtRoom::operator==(const CourtRoom& other) const
 {
-	bool isEqual = true;
+	bool isEqual = false;
 
-	if(other.roomNumber == roomNumber && numOfTrials == other.numOfTrials)
+	if(other.roomNumber == roomNumber && allTrials.size() == other.allTrials.size() && 
+		other.allTrials == this->allTrials)
 	{
-		for(int i = 0; i < other.numOfTrials; i ++)
-		{
-			if((*other.allTrials[i] != *allTrials[i]))
-			{
-				isEqual = false;
-				break;
-			}
-		}
+		isEqual = true;
 	}
 
 	return isEqual;
@@ -132,9 +121,9 @@ bool CourtRoom::operator==(const CourtRoom& other) const
 
 Trial& CourtRoom::operator[](int index) throw(const char*)
 {
-	if (index >= 0 && index < numOfTrials)
+	if (index >= 0 && index < getNumOfTrials())
 	{
-		return *(this->allTrials[index]);
+		return *getTrialByIndex(index);
 	}
 	else
 	{
@@ -144,9 +133,9 @@ Trial& CourtRoom::operator[](int index) throw(const char*)
 
 const Trial& CourtRoom::operator[](int index) const throw(const char*)
 {
-	if (index >= 0 && index < numOfTrials)
+	if (index >= 0 && index < getNumOfTrials())
 	{
-		return *(this->allTrials[index]);
+		return *getTrialByIndex(index);
 	}
 	else
 	{
@@ -158,15 +147,18 @@ ostream& operator<<(ostream& os, const CourtRoom& courtRoom)
 {
 	os << "Court room number " << courtRoom.roomNumber << " Trials: " << endl;
 
-	if(courtRoom.numOfTrials == 0)
+	if(courtRoom.getNumOfTrials() == 0)
 	{
 		os << "empty";
 	}
 	else
 	{
-		for(int i = 0; i < courtRoom.numOfTrials; i ++ ) 
+		vector<Trial*>::const_iterator  itr    = courtRoom.allTrials.begin();
+		vector<Trial*>::const_iterator  itrEnd = courtRoom.allTrials.end();
+	
+		for ( ; itr != itrEnd; ++itr)
 		{
-			os << courtRoom.allTrials[i] << endl;
+			os << *itr;
 		}
 	}
 

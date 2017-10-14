@@ -1,26 +1,20 @@
 #include "Lawyer.h"
 
-Lawyer::Lawyer(const char* name, int id, const char* academicInstitution, int graduatedYear)throw(const char*) : Person(name,id), academicInstitution(nullptr)
+Lawyer::Lawyer(const string& name, int id, const string& academicInstitution, int graduatedYear)throw(const char*) : Person(name,id)
 {
-	if(academicInstitution != nullptr)
+	if(academicInstitution.empty())
 	{
-		this->academicInstitution = new char[strlen(academicInstitution) + 1];
- 		strcpy(this->academicInstitution, academicInstitution);
+		throw("Invalid lawyer academic institution");
 	}
 	else
 	{
-		throw("academicInstitution must have a value! (while initiating Lawyer)");
+		this->academicInstitution = academicInstitution;
 	}
 
 	this->graduatedYear = graduatedYear;
 }
 
-Lawyer::~Lawyer()
-{
-	delete []this->academicInstitution;
-}
-
-inline const char* Lawyer::getAcademicInstitution() const
+inline const string& Lawyer::getAcademicInstitution() const
 {
 	return this->academicInstitution;
 }
@@ -32,5 +26,5 @@ inline int Lawyer::getGraduatedYear() const
 
 void Lawyer::toOs(ostream& os) const
 {
-	os << " Academic Institution: " << this->getAcademicInstitution() << ", Graduated Year: " << this->getGraduatedYear();
- }
+	os << " Academic Institution: " << this->getAcademicInstitution().c_str() << ", Graduated Year: " << this->getGraduatedYear();
+}

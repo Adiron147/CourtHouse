@@ -2,7 +2,7 @@
 #define __PARTY_H
 
 #include <iostream>
-#include "Lawyer.h"
+#include "LawyerAcademyCode.h"
 using namespace std;
 
 class Party
@@ -13,39 +13,35 @@ public:
     enum ePartySide {DEFENSE, PROSECUTION};
     enum ePartyType {SINGLE_PERSON, ORGANIZATION, STATE};
 
-    static const char* strPartySide[];
-    static const char* strPartyType[];
+    static const string strPartySide[];
+    static const string strPartyType[];
 
 private:
-    char* name;
+    string name;
     ePartySide side;
     ePartyType type;
-    Lawyer lawyer;
+    LawyerAcademyCode lawyer;
 
     Party(const Party& other);
-    void setName(const char *name) throw(const char*);
+    void setName(const string& name) throw(const char*);
     void setSide(ePartySide side);
     void setType(ePartyType type);
 	const Party& operator=(const Party& other);
 public:
-    Party(const char* name, ePartySide side, ePartyType type, const char* lawyerName, 
-		int lawyerId, const char* lawyerInstitution, int lawyerGradYear) throw(const char*);
-    ~Party();
+    Party(const string& name, ePartySide side, ePartyType type, const string& lawyerName, 
+		int lawyerId, int lawyerInstitutionId, int lawyerGradYear) throw(const char*);
 
-    inline const char* getName() const;
+    inline const string& getName() const;
 
     inline ePartySide getSide() const;
 
     inline ePartyType getType() const;
 
-    inline const Lawyer& getLawyer() const;
-
-
+    inline const LawyerAcademyCode& getLawyer() const;
     
     bool operator==(const Party& other) const;
 	bool operator!=(const Party& other) const;
     friend ostream& operator<<(ostream& os, const Party& party);
 };
-//
 
 #endif

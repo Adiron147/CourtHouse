@@ -1,6 +1,6 @@
 #include "CourtWorker.h"
 
-CourtWorker::CourtWorker(const char* name, int id, int startingYear, int salary) throw(char*)
+CourtWorker::CourtWorker(const string& name, int id, int startingYear, int salary) throw(char*)
 	: Person(name, id)
 {
 	setSalary(salary);

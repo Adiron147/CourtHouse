@@ -3,6 +3,7 @@
 
 #include <iostream>
 using namespace std;
+#include <vector>
 
 class Trial;
 
@@ -14,13 +15,12 @@ private:
 	static const int TRIAL_NOT_IN_COURT = -1;
 
 	int roomNumber;
-	int numOfTrials;
-	Trial** allTrials;
+	vector<Trial*> allTrials;
 
 	CourtRoom(const CourtRoom& courtRoom);
 	
-	// Returning TRIAL_NOT_IN_COURT if not belong to the court
-	int getTrialIndexById(int trialId) const;
+	Trial* getTrialByIndex(int index);
+	const Trial* getTrialByIndex(int index) const;
 	
 	const CourtRoom& operator=(const CourtRoom& courtRoom);
 public:
@@ -30,7 +30,7 @@ public:
 	inline int getRoomNumber() const {return roomNumber;}
 	// not allowing setRoomNumber because using the serial number
 
-	inline int getNumOfTrials() const {return numOfTrials;}
+	inline int getNumOfTrials() const;
 	// not allowing setNumOfTrials because need to be updated with the addTrial method
 
 	void addTrial(Trial& trial) throw(const char*); //throws exception if the room isTaken(tm,tm)

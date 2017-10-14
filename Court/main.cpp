@@ -1,6 +1,7 @@
 #pragma warning(disable: 4996)
 
 #include <iostream>
+#include <sstream>
 #include <ctime>
 using namespace std;
 #include "CourtHouse.h"
@@ -74,6 +75,8 @@ int main()
 
         addJudgesToCourtHouse(*courtHouse);
 
+		showAllJudges(*courtHouse);
+
         insertTrialsToCourtHouse(*courtHouse);
 
         //  (*courtHouse)[index][index] is a Trial: CourtHouse[CourtRoom_Number][Trial_Number_in_the_room]
@@ -89,7 +92,7 @@ int main()
 
         showTrialsBySubject(*courtHouse, Trial::CRIMINAL);
 
-        freeCourtHouse(courtHouse);
+        //freeCourtHouse(courtHouse);
         
     }
     catch(...)
@@ -104,7 +107,8 @@ CourtHouse* initCourtHouse()
     try
     {
         const int size = 3;
-        CourtHouse* court = new CourtHouse("Israel", "Tel Aviv", "Afeka Court House", size);
+		CourtHouse* court = CourtHouse::getInstance();
+		court->setNumberOfCourtRooms(size);
         return court;
     }
     catch (const char* msg)
@@ -112,8 +116,6 @@ CourtHouse* initCourtHouse()
         cout << msg << endl;
 		return NULL;
     }
-	
-	
 }
 
 void addJudgesToCourtHouse(CourtHouse& courtHouse)
@@ -124,18 +126,17 @@ void addJudgesToCourtHouse(CourtHouse& courtHouse)
 
         for( int i = 0 ; i < size ; i++)
         {
-            char name[LEN];
-            sprintf(name,"Judge %d",(i+1));
+			stringstream sstm;
+			sstm << "Judge " << i+1;
+			string name = sstm.str();
             int id = (i+1);
-            char* academicInst = strdup("Institute");
+            string academicInst = "Institute";
             int graduateYear = 1990+i;
             int startYear = 2000+i;
             int salary = (i+1)*10000;
 
             Judge* judge =  new Judge(name, id, academicInst, graduateYear, startYear, salary);
             courtHouse.addJudge(judge);
-
-            delete academicInst;
         }
     }
     catch (const char* message)
@@ -166,14 +167,15 @@ void insertTrialsToCourtHouse(CourtHouse& courtHouse)
 
         for(int i = 0 ; i < size ; i++)
         {
-            char name[LEN];
-            sprintf(name,"Judge %d",(i+1));
+            stringstream sstm;
+			sstm << "Judge " << i+1;
+			string name = sstm.str();
             Judge* judge = courtHouse.getJudgeByName(name);
             if(judge != nullptr)
             {
           
-                Party *defense = new Party("Defendant", Party::DEFENSE, Party::SINGLE_PERSON, "Defense Lawyer", 10+i, "Yale", 1980+i);
-                Party *prosecution =new Party("Prosecutor",Party::PROSECUTION, Party::SINGLE_PERSON, "Prosecution Lawyer", 10+i, "Harvard", 1980+i+1);
+                Party *defense = new Party("Defendant", Party::DEFENSE, Party::SINGLE_PERSON, "Defense Lawyer", 10+i, 0/*"Yale"*/, 1980+i);
+                Party *prosecution =new Party("Prosecutor",Party::PROSECUTION, Party::SINGLE_PERSON, "Prosecution Lawyer", 10+i, 1/*"Harvard"*/, 1980+i+1);
                 if(!courtHouse[i].isTaken(start,end) && !(*courtHouse.getJudgeByName(name)).isBusy(start,end))
                 {
                     Trial* currTrial = new Trial((Trial::eTrialSubject) (i & numOfTypes), *judge, *defense, *prosecution, courtHouse[i], start, end);
@@ -223,13 +225,18 @@ void insertJuryToTrial(Trial& trial)
 void showAllJudges(const CourtHouse& courtHouse)
 {
     int size = courtHouse.getNumOfJudges();
-    const Judge*const* allJudges = courtHouse.getAllJudges();
+    const vector<Judge*> allJudges = courtHouse.getAllJudges();
     cout << "The court house judges are: " << endl;
 
-    for( int i = 0 ; i < size ; i++)
-    {
-        cout << *allJudges[i] << endl;
-    }
+    vector<Judge*>::const_iterator  itr    = allJudges.begin();
+	vector<Judge*>::const_iterator  itrEnd = allJudges.end();
+
+	for ( ; itr != itrEnd; ++itr)
+	{
+		cout << *(*itr) << endl;
+	}
+
+	cout << endl << endl;
 }
 
 void showInformationForJudge(const CourtHouse& court,const char* name)
@@ -277,7 +284,7 @@ void showAvailableRoomsForTrialsInACertainHour(const CourtHouse& court, tm& star
 {
     int size = court.getNumOfCourtRooms();
 
-    cout << endl << endl << "The rooms that are available at this time are: " << endl;
+    cout << endl << endl <<  "The rooms that are available at this time are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         if(!court[i].isTaken(start, end))
@@ -291,7 +298,7 @@ void showTrialsBySubject(const CourtHouse& court, Trial::eTrialSubject subject)
 {
     int size = court.getNumOfCourtRooms();
 
-    cout << endl << endl << "The trials discussing the subject " << Trial::strTrialSubject[subject] << " are: " << endl;
+	cout << endl << endl << "The trials discussing the subject " << Trial::strTrialSubject[subject].c_str() << " are: " << endl;
     for(int i = 0 ; i < size ; i++)
     {
         int numOfTrials = court[i].getNumOfTrials();

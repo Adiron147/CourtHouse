@@ -1,20 +1,11 @@
 #include "Party.h"
 
-const char* Party::strPartySide[] = {"Defense", "Prosecution"};
-const char* Party::strPartyType[] = {"Single Person", "Organization", "State"};
+const string Party::strPartySide[] = {"Defense", "Prosecution"};
+const string Party::strPartyType[] = {"Single Person", "Organization", "State"};
 
-void Party::setName(const char *name) throw(const char*)
+void Party::setName(const string& name) throw(const char*)
 {
-	delete []this->name;
-	if(name == nullptr)
-	{
-		throw("Party name can't be null");
-	}
-	else
-	{
- 		this->name = new char[strlen(name) + 1];
- 		strcpy(this->name, name);
-	}
+	this->name = name;
 }
 void Party::setSide(Party::ePartySide side)
 {
@@ -25,21 +16,16 @@ void Party::setType(Party::ePartyType type)
 	this->type = type;
 }
 
-Party::Party(const char* name, ePartySide side, ePartyType type, const char* lawyerName, 
-	int lawyerId, const char* lawyerInstitution, int lawyerGradYear)throw(const char*): 
-name(nullptr), lawyer(lawyerName,lawyerId,lawyerInstitution,lawyerGradYear)
+Party::Party(const string& name, ePartySide side, ePartyType type, const string& lawyerName, 
+	int lawyerId, int lawyerInstitutionId, int lawyerGradYear)throw(const char*): 
+lawyer(lawyerName,lawyerId,lawyerGradYear, lawyerInstitutionId)
 {
 	setName(name);
 	setSide(side);
 	setType(type);
 }
 
-Party::~Party()
-{
-	delete[] name;
-}
-
-inline const char*  Party::getName() const
+inline const string&  Party::getName() const
 {
 	return this->name;
 }
@@ -54,15 +40,14 @@ inline  Party::ePartyType  Party::getType() const
 	return this->type;
 }
 
-inline const Lawyer& Party::getLawyer() const
+inline const LawyerAcademyCode& Party::getLawyer() const
 {
 	return this->lawyer;
 }
 
 bool Party::operator==(const Party& other) const
 {
-	return (strcmp(this->name, other.getName()) && this->side == other.getType() && this->type == other.getType() && this->lawyer == other.getLawyer());
-
+	return ((other.name.compare(this->name)==0) && this->side == other.getType() && this->type == other.getType() && this->lawyer == other.getLawyer());
 }
 
 bool Party::operator!=(const Party& other) const
@@ -72,7 +57,7 @@ bool Party::operator!=(const Party& other) const
 
  ostream& operator<<(ostream& os, const Party& party)
 {
-	os << "Party Name: " << party.name << ", Side: " << Party::strPartySide[party.side] << 
-		", Type: " << Party::strPartyType[party.type] << ", Lawyer: " << party.lawyer;
+	os << "Party Name: " << party.name.c_str() << ", Side: " << Party::strPartySide[party.side].c_str() << 
+		", Type: " << Party::strPartyType[party.type].c_str() << ", Lawyer: " << party.lawyer;
 	 return os;
 }

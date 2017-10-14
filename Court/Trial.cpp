@@ -4,8 +4,10 @@
 #include "Jury.h"
 #include "CourtRoom.h"
 #include "Judge.h"
+#include "TrialAddedVisitor.h"
+#include "TrialRemovedVisitor.h"
 
-const char* Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
+const string Trial::strTrialSubject[] = {"Criminal", "Youth", "Civil", "Property", "Family", "Class Action", "Transportation", "Contracts"};
 int Trial::ID = 0;
 
 //judge shouldn't be busy, room shouldn't be taken and defense != prosecution
@@ -134,9 +136,19 @@ void Trial::setJudge(Judge* judge) throw(const char*)
 			if(this->judge != nullptr)
 			{
 				this->judge->removeTrial(this->trialId);
+				
+				// Activating a visitor for subtracting money from this judge's salary
+				TrialRemovedVisitor *trialRemovedVisitor = new TrialRemovedVisitor();
+				this->judge->accept((IVisitor*)trialRemovedVisitor );
+				delete trialRemovedVisitor ;
 			}
 			this->judge = judge;
 			judge->addTrial(*this);
+
+			// Activating a visitor for adding money from this judge's salary
+			TrialAddedVisitor *trialAddedVisitor = new TrialAddedVisitor();
+			this->judge->accept((IVisitor*)trialAddedVisitor);
+			delete trialAddedVisitor;
 		}	
 	}
 }
@@ -220,7 +232,7 @@ ostream& operator<<(ostream& os, const Trial& trial)
 
 	TmUtilities::tmToOs(os, trial.endTime);
 
-	os << " subject: " << Trial::strTrialSubject[trial.subject] <<
+	os << " subject: " << Trial::strTrialSubject[trial.subject].c_str() <<
 		endl << " Judge: " << *trial.judge << endl;
 	
 	if(trial.hasJury())

@@ -1,8 +1,7 @@
 #include "Jury.h"
 #include "JuryMember.h"
 
-Jury::Jury(JuryMember** allJuryMembers, int numOfMembers, int maxNumOfMembers) throw(const char*) :
-allJuryMembers(nullptr)
+Jury::Jury(JuryMember** allJuryMembers, int numOfMembers, int maxNumOfMembers) throw(const char*)
 {
 	if(maxNumOfMembers > 0)
 	{
@@ -18,22 +17,28 @@ allJuryMembers(nullptr)
 
 Jury::~Jury()
 {
-	for(int i = 0; i < numOfMembers; i++)
-	{
-		delete allJuryMembers[i];
-	}
-
-	delete []allJuryMembers;
+	deleteMembers();
 }
 
 void Jury::deleteMembers()
 {
-	for(int i = 0; i < numOfMembers; i++)
+	vector<JuryMember*>::iterator  itr    = allJuryMembers.begin();
+	vector<JuryMember*>::iterator  itrEnd = allJuryMembers.end();
+	
+	for ( ; itr != itrEnd; ++itr)
 	{
-		delete allJuryMembers[i];
+	    delete *itr;
 	}
+}
 
-	delete []allJuryMembers;
+JuryMember* Jury::getMemberByIndex(int index)
+{
+	vector<JuryMember*>::iterator  itr    = this->allJuryMembers.begin();
+	vector<JuryMember*>::iterator  itrEnd = this->allJuryMembers.end();
+
+	for(int i = 0; itr != itrEnd && i < index; ++i, ++itr );
+
+	return *itr;
 }
 
 void Jury::setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(const char*)
@@ -44,18 +49,13 @@ void Jury::setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(c
 		{
 			if(numOfMembers <= this->maxNumOfMembers)
 			{
-				if(this->allJuryMembers != nullptr)
+				deleteMembers();
+
+				this->allJuryMembers.clear();
+				for(int i = 0; i < numOfMembers; i++)
 				{
-					for(int i = 0; i < this->numOfMembers; i++)
-					{
-						delete allJuryMembers[i];
-					}
+					this->allJuryMembers.push_back(allJuryMembers[i]);
 				}
-
-				delete []this->allJuryMembers;
-
-				this->allJuryMembers = allJuryMembers;
-				this->numOfMembers = numOfMembers;
 			}
 			else
 			{
@@ -75,7 +75,7 @@ void Jury::setJuryMembers(JuryMember** allJuryMembers, int numOfMembers) throw(c
 
 inline int Jury::getNumOfJuryMembers() const
 {
-	return numOfMembers;
+	return allJuryMembers.size();
 }
 
 void Jury::addJuryMember(JuryMember* juryMember) throw(const char*)
@@ -86,10 +86,9 @@ void Jury::addJuryMember(JuryMember* juryMember) throw(const char*)
 	}
 	else
 	{
-		if(this->numOfMembers + 1 <= maxNumOfMembers)
+		if(this->getNumOfJuryMembers() + 1 <= maxNumOfMembers)
 		{
-			this->allJuryMembers[this->numOfMembers] = juryMember;
-			++this->numOfMembers;
+			this->allJuryMembers.push_back(juryMember);
 		}
 		else
 		{
@@ -102,37 +101,33 @@ bool Jury::removeJuryMember(int id) throw(const char*)
 {
 	bool isRemoved = false;
 
-	for(int i = 0; i < numOfMembers; i++)
+	vector<JuryMember*>::iterator  itr    = allJuryMembers.begin();
+	vector<JuryMember*>::iterator  itrEnd = allJuryMembers.end();
+	
+	for ( ; itr != itrEnd; ++itr)
 	{
-		if( allJuryMembers[i]->getId() == id)
+		if((*itr)->getId() == id)
 		{
-			delete allJuryMembers[i];
-			
-			// Shifting all members one place left
-			for(int j = i; j < numOfMembers - 1; j ++)
-			{
-				allJuryMembers[i] = allJuryMembers[i + 1];
-			}
-			
-			--numOfMembers;
-
+			delete *itr;
+			allJuryMembers.erase(itr);
 			isRemoved = true;
 		}
 	}
 
+	// Checking if the trial is in the court
 	if(!isRemoved)
 	{
-		throw("Jury does not contain JuryMember (while removing jury)");
+		throw("Jury does not conatin JuryMember (while removing jury)");
 	}
-
+	
 	return isRemoved;
 }
 
 const JuryMember& Jury::operator[](int index) const throw(const char*)
 {
-	if(index >=0 && index < numOfMembers)
+	if(index >=0 && index < getNumOfJuryMembers())
 	{
-		return *allJuryMembers[index];
+		return *getMemberByIndex(index);
 	}
 	else
 	{
@@ -142,9 +137,9 @@ const JuryMember& Jury::operator[](int index) const throw(const char*)
 
 JuryMember& Jury::operator[](int index) throw(const char*)
 {
-	if(index >=0 && index < numOfMembers)
+	if(index >=0 && index < getNumOfJuryMembers())
 	{
-		return *allJuryMembers[index];
+		return *getMemberByIndex(index);
 	}
 	else
 	{
@@ -157,15 +152,10 @@ bool Jury::operator==(const Jury& other) const
 	bool isEqual = true;
 
 	if(this->maxNumOfMembers == other.maxNumOfMembers &&
-		this->numOfMembers == numOfMembers)
+		this->getNumOfJuryMembers() == getNumOfJuryMembers() &&
+		this->allJuryMembers == other.allJuryMembers)
 	{
-		for(int i = 0; i < numOfMembers; i++)
-		{
-			if( allJuryMembers[i] != other.allJuryMembers[i])
-			{
-				isEqual = false;
-			}
-		}
+		isEqual = false;
 	}
 	else
 	{
@@ -175,20 +165,33 @@ bool Jury::operator==(const Jury& other) const
 	return isEqual;
 }
 
+const JuryMember* Jury::getMemberByIndex(int index) const
+{
+	vector<JuryMember*>::const_iterator  itr    = this->allJuryMembers.begin();
+	vector<JuryMember*>::const_iterator  itrEnd = this->allJuryMembers.end();
+
+	for(int i = 0; itr != itrEnd && i < index; ++i, ++itr );
+
+	return *itr;
+}
+
 ostream& operator<<(ostream& os, const Jury& jury)
 {
 	os << "Jury: ";
 	
-	if(jury.numOfMembers == 0)
+	if(jury.getNumOfJuryMembers() == 0)
 	{
 		os << "No members";
 	}
 	else
 	{
 		os << endl;
-		for(int i = 0; i < jury.numOfMembers; i++)
+		vector<JuryMember*>::const_iterator  itr    = jury.allJuryMembers.begin();
+		vector<JuryMember*>::const_iterator  itrEnd = jury.allJuryMembers.end();
+	
+		for ( ; itr != itrEnd; ++itr)
 		{
-			os << *jury.allJuryMembers[i] << endl;
+			os << *(*itr) << endl;
 		}
 	}
 

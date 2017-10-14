@@ -15,7 +15,7 @@ class Trial
 public:
 	static const int NUM_OF_TYPES = 8;
 	enum eTrialSubject{CRIMINAL, YOUTH, CIVIL, PROPERTY, FAMILY, CLASS_ACTION, TRANSPORTATION, CONTRACTS};
-	static const char* strTrialSubject[];
+	static const string strTrialSubject[];
 
 private:
 	static int ID;

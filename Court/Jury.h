@@ -3,6 +3,7 @@
 
 #include <iostream>
 using namespace std;
+#include <vector>
 
 class JuryMember;
 
@@ -12,12 +13,13 @@ class Jury
 static const int DEFAULT_MAX_NUM_OF_JURY_MEMBERS = 12;
 
 private:
-    JuryMember** allJuryMembers;
-    int numOfMembers;            //logical size
-    int maxNumOfMembers;        //physical size
+    vector<JuryMember*> allJuryMembers;
+    int maxNumOfMembers;
     Jury(const Jury& otherJury);
 	const Jury& operator=(const Jury& jury);
     void setNumOfMembers(int numOfMembers);
+	JuryMember* getMemberByIndex(int index);
+	const JuryMember* getMemberByIndex(int index) const;
 	void deleteMembers();
 
 public:

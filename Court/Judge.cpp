@@ -2,37 +2,35 @@
 #include "Trial.h"
 #include "TmUtilities.h"
 
-Judge::Judge(const char* name, int id, //Person
-        const char* academicInstitution, int graduatedYear, //Lawyer
+Judge::Judge(const string& name, int id, //Person
+        const string& academicInstitution, int graduatedYear, //Lawyer
         int startingYear, int salary) throw(const char*): 
 		Person(name, id), 
 		Lawyer(name, id, academicInstitution, graduatedYear),
 		CourtWorker(name, id,startingYear, salary)
 {
-	trials = nullptr;
-	numOfTrials = 0;
 }//CourtWorker
-
-Judge::~Judge()
-{
-	delete[] trials;
-}
 
 inline int Judge::getNumOfTrials() const
 {
-	return numOfTrials;
+	return trials.getSize();
 }
 
 const Trial* Judge::getTrialById(int id) const
 {
-	Trial* foundTrial = nullptr;
+	const Trial* foundTrial = nullptr;
 
-	for(int i = 0; i < numOfTrials; i ++)
+	const Node<Trial*> *head = this->trials.getHead();
+
+	while(head != nullptr)
 	{
-		if(this->trials[i]->getTrialId() == id)
+		if(head->getData()->getTrialId() == id)
 		{
-			foundTrial = this->trials[i];
+			foundTrial = head->getData();
+			break;
 		}
+
+		head = head->getNext();
 	}
 
 	return foundTrial;
@@ -46,23 +44,7 @@ void Judge::addTrial(Trial& trial) throw(const char*)
 	}
 	else
 	{
-		Trial** updatedTrials = new Trial*[numOfTrials + 1];
-		
-		// Coppying all the old trials:
-
-		for(int i = 0; i < numOfTrials; i ++)
-		{
-			updatedTrials[i] = trials[i];
-		}
-
-		// No need for the old array anymore
-		delete []this->trials;
-
-		updatedTrials[numOfTrials] = &trial;
-
-		++numOfTrials;
-
-		trials = updatedTrials;
+		trials.addToEnd(&trial);
 	}
 }//throws exception if the judge isBusy(tm,tm)
 
@@ -70,31 +52,17 @@ void Judge::removeTrial(int trialId)
 {
 	if(getTrialById(trialId) != nullptr)
 	{
-		if(numOfTrials > 0)
+		const Node<Trial*> *head = this->trials.getHead();
+
+		while(head != nullptr)
 		{
-			Trial** updatedTrials = new Trial*[numOfTrials - 1];
-		
-			Trial* removedTrial = nullptr;
-
-			// Coppying all the other trials:
-
-			int updatedTrialsIndex = 0, oldTrialsIndex = 0;
-
-			while(updatedTrialsIndex < numOfTrials - 1)
+			if(head->getData()->getTrialId() == trialId)
 			{
-				if(trials[oldTrialsIndex]->getTrialId() != trialId)
-				{
-					updatedTrials[updatedTrialsIndex] = trials[oldTrialsIndex];
-					++updatedTrialsIndex;
-				}
-
-				++oldTrialsIndex;
+				this->trials.removeFirstNodeOf(head->getData());
+				break;
 			}
 
-			// No need for the old array anymore
-			delete []this->trials;
-
-			trials = updatedTrials;
+			head = head->getNext();
 		}
 	}
 }
@@ -103,14 +71,19 @@ bool Judge::isBusy(const tm& startTime, const tm& endTime) const
 {
 	bool isBusy = false;
 
-	for(int i = 0; i < numOfTrials; i ++)
+	const Node<Trial*> *head = this->trials.getHead();
+
+	while(head != nullptr)
 	{
-		// Checking if the current trial colides with the given time
-		if(TmUtilities::doesColide(this->trials[i]->getStartTime(), this->trials[i]->getEndTime(), startTime, endTime) )
+		const tm& currTrialStart = head->getData()->getStartTime();
+		const tm& currTrialEnd = head->getData()->getEndTime();
+		if(TmUtilities::doesColide(currTrialStart, currTrialEnd, startTime, endTime))
 		{
 			isBusy = true;
 			break;
 		}
+
+		head = head->getNext();
 	}
 
 	return isBusy;

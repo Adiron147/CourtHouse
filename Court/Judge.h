@@ -8,23 +8,24 @@
 #include "CourtWorker.h"
 #include "Lawyer.h"
 #include <ctime>
+#include "MyList.h"
+#include "IVisitable.h"
+#include "IVisitor.h"
 
 class Trial;
 
-class Judge : public Lawyer, public CourtWorker
+class Judge : public Lawyer, public CourtWorker, public IVisitable
 {
 private:
-    Trial **trials;
-    int numOfTrials; //should be initialized with 0 in the constructor implementation
+    MyList<Trial*> trials;
 
     Judge(const Judge& other);
 	const Judge& operator=(const Judge& other);
 
 public:
-    Judge(const char* name, int id, //Person
-          const char* academicInstitution, int graduatedYear, //Lawyer
+    Judge(const string& name, int id, //Person
+          const string& academicInstitution, int graduatedYear, //Lawyer
           int startingYear, int salary) throw(const char*); //CourtWorker
-    ~Judge();
 
     inline int getNumOfTrials() const;
 
@@ -32,6 +33,8 @@ public:
     void addTrial(Trial& trial) throw(const char*); //throws exception if the judge isBusy(tm,tm)
 	void removeTrial(int trialId);
     bool isBusy(const tm& startTime, const tm& endTime) const;
+
+	virtual void accept(IVisitor* visitor)	{visitor->visit(this);}
 
     void operator += (Trial& trial) throw(const char*);
     void toOs(ostream &os) const override;

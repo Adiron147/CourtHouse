@@ -8,20 +8,19 @@ class Person
 {
 
 private:
-    char* name;
+    string name;
     int id;
 
-	Person(const Person& other);
-	void setName(const char* name) throw(const char*);
+	Person(const Person& other) throw(const char*);
+	void setName(const string& name) throw(const char*);
     void setId(int id) throw(const char*);
 	
 	const Person& operator=(const Person& other);
 
 public:
-    Person(const char* name, int id) throw(const char*);
-    virtual ~Person();
+    Person(const string& name, int id) throw(const char*);
 
-	inline const char* getName() const {return name;}
+	inline const string& getName() const {return name;}
 
 	inline int getId() const {return id;}
 

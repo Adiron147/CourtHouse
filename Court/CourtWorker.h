@@ -14,11 +14,11 @@ private:
     int salary;
 
 	CourtWorker(const CourtWorker& other);
-    void setStartingYear(int startingYear) throw(char*);
+    void setStartingYear(int startingYear) throw(const char*);
 
 public:
 
-    CourtWorker(const char* name, int id, int startingYear, int salary) throw(char*); //throwing for wrong id/startingYear/salary
+    CourtWorker(const string& name, int id, int startingYear, int salary) throw(const char*); //throwing for wrong id/startingYear/salary
 
     inline int getStartingYear() const;
 
